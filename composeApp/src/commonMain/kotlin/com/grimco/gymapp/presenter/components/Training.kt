@@ -26,7 +26,7 @@ fun Training(
 ) {
 
     Box(
-        modifier = modifier.size(width = 200.dp, height = 200.dp)
+        modifier = modifier.size(width = 150.dp, height = 150.dp)
             .padding(top = 5.dp)
             .clip(RoundedCornerShape(16.dp))
             .clickable {
