@@ -1,9 +1,9 @@
 package com.grimco.gymapp
 
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.runtime.*
+import androidx.compose.material3.Surface
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.grimco.gymapp.presentation.navigation.NavDisplayWrapper
 import com.grimco.gymapp.presentation.theme.GymAppTheme
@@ -13,9 +13,12 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 @Preview
 fun App() {
     GymAppTheme {
-        Scaffold { paddingValues ->
-            NavDisplayWrapper(modifier = Modifier.padding(paddingValues = paddingValues))
+        Surface {
 
+            Scaffold { paddingValues ->
+                NavDisplayWrapper(modifier = Modifier.padding(paddingValues = paddingValues))
+
+            }
         }
     }
 }
