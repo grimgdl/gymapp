@@ -1,4 +1,4 @@
-package com.grimco.gymapp.presenter.components
+package com.grimco.gymapp.presentation.components
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row

@@ -1,4 +1,4 @@
-package com.grimco.gymapp.presenter.screens
+package com.grimco.gymapp.presentation.screens
 
 
 import androidx.compose.foundation.layout.Column
@@ -12,9 +12,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.grimco.gymapp.model.Training
-import com.grimco.gymapp.presenter.components.FavoriteTraining
-import com.grimco.gymapp.presenter.components.StatComponent
+import com.grimco.gymapp.data.model.Training
+import com.grimco.gymapp.presentation.components.FavoriteTraining
+import com.grimco.gymapp.presentation.components.StatComponent
 import kotlin.collections.listOf
 
 

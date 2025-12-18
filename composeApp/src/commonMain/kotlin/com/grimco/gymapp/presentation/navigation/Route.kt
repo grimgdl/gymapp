@@ -1,4 +1,4 @@
-package com.grimco.gymapp.presenter.navigation
+package com.grimco.gymapp.presentation.navigation
 
 import androidx.navigation3.runtime.NavKey
 import kotlinx.serialization.Serializable

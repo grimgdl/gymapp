@@ -1,4 +1,4 @@
-package com.grimco.gymapp.model
+package com.grimco.gymapp.data.model
 
 data class Training(
     val discipline: String,
