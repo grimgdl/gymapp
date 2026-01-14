@@ -8,8 +8,9 @@ import androidx.compose.ui.graphics.Color
 val darkBackground = Color(0xFF343434)
 val cardDarkBackground = Color(0xFF2F405A)
 
-val lightBackground = Color(0xFFF8F8F8)
-val cardLightBackground = Color(0xFFEAEAEA)
+val lightBackground = Color(0xFFFFFFFF)
+val cardLightBackground = Color(0xFF6093AC)
+
 
 
 val DarkColorScheme = darkColorScheme(
@@ -20,6 +21,4 @@ val DarkColorScheme = darkColorScheme(
 
 val LightColorScheme = lightColorScheme(
     background = lightBackground,
-    surface = lightBackground,
-    surfaceVariant = cardLightBackground
 )

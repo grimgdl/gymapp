@@ -5,21 +5,28 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.grimco.gymapp.data.model.Training
 import com.grimco.gymapp.presentation.components.FavoriteTraining
 import com.grimco.gymapp.presentation.components.StatComponent
-import kotlin.collections.listOf
+import io.ktor.utils.io.InternalAPI
 
 
+@OptIn(InternalAPI::class)
+@Preview(showBackground = true)
 @Composable
 fun MainScreen(modifier: Modifier = Modifier) {
+
+    val name = remember { "Gustavo" }
 
     val favoriteList = remember {
         listOf(
@@ -31,13 +38,17 @@ fun MainScreen(modifier: Modifier = Modifier) {
     }
 
     Column(
-        modifier = modifier
-            .padding(16.dp)
+        modifier = modifier.padding(16.dp)
     ) {
 
         Text(
-            text ="Favorites",
-            style = TextStyle(
+            text = "¡Hola $name, \n Listo para tu entrenamiento?",
+            style = MaterialTheme.typography.headlineLarge
+        )
+
+        Spacer(modifier = Modifier.height(20.dp))
+        Text(
+            text = "Favorites", style = TextStyle(
                 fontSize = 22.sp
             )
         )
@@ -49,8 +60,7 @@ fun MainScreen(modifier: Modifier = Modifier) {
         Spacer(modifier = Modifier.height(20.dp))
 
         Text(
-            text ="Stats",
-            style = TextStyle(
+            text = "Stats", style = TextStyle(
                 fontSize = 22.sp
             )
         )
@@ -61,7 +71,6 @@ fun MainScreen(modifier: Modifier = Modifier) {
 
 
     }
-
 
 
 }
