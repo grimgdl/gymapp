@@ -1,6 +1,11 @@
 package com.grimco.gymapp.presentation.components
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.material.icons.Icons
@@ -20,50 +25,36 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun StatComponent(modifier: Modifier = Modifier) {
 
-    LazyVerticalGrid(
-        columns = GridCells.Fixed(2),
-        verticalArrangement = Arrangement.spacedBy(5.dp),
-        horizontalArrangement = Arrangement.spacedBy(5.dp),
+
+    Column(
         modifier = modifier
     ) {
-        item {
-            CardStat(
-                value = "500 cal",
-                icon = {
-                    Icon(
-                        imageVector = Icons.Default.Whatshot,
-                        contentDescription = null,
-                        tint = Color(0xFFF57135)
-                    )
-                }
+        CardActivity()
+
+        Spacer(modifier = Modifier.height(15.dp))
+
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(10.dp),
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            CardStatParam(
+                title = "CALORIES",
+                content = "1,240 kcal",
+                percent = "+12",
+                modifier = Modifier.weight(1f)
             )
-        }
-        item{
-            CardStat(
-                value = "500 steps",
-                icon = {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.DirectionsWalk,
-                        contentDescription = null,
-                        tint = Color(0xFF51B14D)
-                    )
-                }
+
+            CardStatParam(
+                title = "WORKOUTS",
+                content = "4/5 days",
+                percent = "-12",
+                modifier = Modifier.weight(1f)
             )
         }
 
-        item {
-            CardStat(
-                value = "165 BPM",
-                icon = {
-                    Icon(
-                        imageVector = Icons.Default.MonitorHeart,
-                        contentDescription = null,
-                        tint = Color.Red
-                    )
-                }
-            )
-        }
+
 
     }
+
 
 }

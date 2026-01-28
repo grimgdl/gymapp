@@ -18,7 +18,7 @@ fun FavoriteTraining(
     LazyRow(
         modifier = modifier
             .fillMaxWidth(),
-        horizontalArrangement = Arrangement.spacedBy(5.dp)
+        horizontalArrangement = Arrangement.spacedBy(20.dp)
     ) {
         items(favoriteList) { training ->
 
