@@ -20,6 +20,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -27,6 +28,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -42,17 +44,20 @@ import io.ktor.utils.io.InternalAPI
 @OptIn(InternalAPI::class)
 @Preview(showBackground = true)
 @Composable
-fun MainScreen(modifier: Modifier = Modifier) {
+fun MainScreen(
+    modifier: Modifier = Modifier,
+    onTraining: (training: Training) -> Unit
+) {
 
     val scrollState = rememberScrollState()
     val name = remember { "Gustavo" }
 
     val favoriteList = remember {
         listOf(
-            Training(discipline = "Back", image = "https://www.mensfitness.com/.image/w_750,q_auto:good,c_limit/MjEzNzgzNTQ5NTIwNjUyMTI1/athlete-muscular-fitness-male-model-pulling-up-on-horizontal-bar.jpg?arena_f_auto"),
-            Training(discipline = "legs", image = "https://cdn.muscleandstrength.com/sites/default/files/images/articles/leg-training-for-women-split-squat.jpg"),
-            Training(discipline = "Arm", image = "https://www.trainheroic.com/wp-content/uploads/2023/01/AdobeStock_298511434-TH-jpg.webp"),
-            Training(discipline = "chest", image = "https://cdn.muscleandstrength.com/sites/default/files/field/feature-image/workout/10mass_feature.jpg")
+            Training(discipline = "Back", image = "https://www.mensfitness.com/.image/w_750,q_auto:good,c_limit/MjEzNzgzNTQ5NTIwNjUyMTI1/athlete-muscular-fitness-male-model-pulling-up-on-horizontal-bar.jpg?arena_f_auto", minutes = "25 mins", intensity = "High power"),
+            Training(discipline = "legs", image = "https://cdn.muscleandstrength.com/sites/default/files/images/articles/leg-training-for-women-split-squat.jpg", minutes = "15 mins", intensity = "middle power"),
+            Training(discipline = "Arm", image = "https://www.trainheroic.com/wp-content/uploads/2023/01/AdobeStock_298511434-TH-jpg.webp", minutes = "13 mins", intensity = "High power"),
+            Training(discipline = "chest", image = "https://cdn.muscleandstrength.com/sites/default/files/field/feature-image/workout/10mass_feature.jpg", minutes = "15 mins", intensity = "High power")
         )
     }
 
@@ -107,17 +112,35 @@ fun MainScreen(modifier: Modifier = Modifier) {
 
 
         Spacer(modifier = Modifier.height(30.dp))
-        Text(
-            text = "Favorite Routines", style = TextStyle(
-                fontSize = 22.sp,
-                color = MaterialTheme.colorScheme.primary,
-                fontWeight = FontWeight.Bold
+
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = "Favorite Routines", style = TextStyle(
+                    fontSize = 22.sp,
+                    color = MaterialTheme.colorScheme.primary,
+                    fontWeight = FontWeight.Bold
+                )
             )
-        )
+
+            TextButton(onClick = {}) {
+                Text(
+                    "See all",
+                    color = MaterialTheme.colorScheme.tertiary,
+                    fontWeight = FontWeight.Bold
+                )
+            }
+        }
+
 
         Spacer(modifier = Modifier.height(30.dp))
 
-        FavoriteTraining(favoriteList = favoriteList)
+        FavoriteTraining(favoriteList = favoriteList) {
+            onTraining(it)
+        }
 
         Spacer(modifier = Modifier.height(30.dp))
 

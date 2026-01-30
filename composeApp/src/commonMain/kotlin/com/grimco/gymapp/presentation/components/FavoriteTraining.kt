@@ -13,7 +13,8 @@ import com.grimco.gymapp.data.model.Training
 @Composable
 fun FavoriteTraining(
     favoriteList: List<Training>,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onClick: (data: Training) -> Unit
 ) {
     LazyRow(
         modifier = modifier
@@ -22,10 +23,9 @@ fun FavoriteTraining(
     ) {
         items(favoriteList) { training ->
 
-            TrainingComp(
-                discipline = training.discipline,
-                image = training.image
-            )
+            TrainingComp(data = training) { data ->
+                onClick(data)
+            }
         }
 
     }

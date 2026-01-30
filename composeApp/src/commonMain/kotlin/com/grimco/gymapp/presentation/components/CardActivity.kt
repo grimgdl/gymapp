@@ -45,7 +45,7 @@ fun CardActivity(modifier: Modifier = Modifier) {
                 Text(
                     text = "Weekly Goal",
                     style = TextStyle(
-                        color = MaterialTheme.colorScheme.secondaryContainer,
+                        color = MaterialTheme.colorScheme.tertiary,
                         fontWeight = FontWeight.SemiBold,
                         fontSize = 18.sp
                     )

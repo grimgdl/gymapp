@@ -12,6 +12,8 @@ val secondaryDark = Color(0xFF9399A5)
 
 val variantDark = Color(0xFF194CEA)
 
+val tertiaryDark = Color(0xFF1244DB)
+
 val lightBackground = Color(0xFFFFFFFF)
 val cardLightBackground = Color(0xFF6093AC)
 
@@ -21,7 +23,8 @@ val DarkColorScheme = darkColorScheme(
     background = darkBackground,
     surface = darkBackground,
     surfaceContainerHighest = cardDarkBackground,
-    surfaceVariant = variantDark
+    surfaceVariant = variantDark,
+    tertiary = tertiaryDark
 )
 
 val LightColorScheme = lightColorScheme(

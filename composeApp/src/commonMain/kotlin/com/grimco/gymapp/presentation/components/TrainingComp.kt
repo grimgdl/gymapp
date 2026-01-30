@@ -1,5 +1,6 @@
 package com.grimco.gymapp.presentation.components
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -23,27 +24,31 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
+import com.grimco.gymapp.data.model.Training
 
 @Composable
 @Preview
 fun TrainingComp(
-    image: Any = "https://www.mensfitness.com/.image/w_750,q_auto:good,c_limit/MjEzNzgzNTQ5NTIwNjUyMTI1/athlete-muscular-fitness-male-model-pulling-up-on-horizontal-bar.jpg?arena_f_auto",
-    discipline: String = "Training",
-    minutes: String = "25 mins",
-    intensity: String = "High Intensity",
-    modifier: Modifier = Modifier
+    data: Training,
+    modifier: Modifier = Modifier,
+    onClick: (item: Training) -> Unit
 ) {
 
 
-    Column {
+    Column(
+        modifier = modifier
+            .clickable {
+                onClick(data)
+            }
+    ) {
         Box(
-            modifier = modifier
+            modifier = Modifier
                 .size(200.dp)
                 .clip(RoundedCornerShape(10.dp))
         ){
 
             AsyncImage(
-                model = image,
+                model = data.image,
                 contentScale = ContentScale.Crop,
                 contentDescription = null,
                 modifier = Modifier.fillMaxSize()
@@ -52,13 +57,13 @@ fun TrainingComp(
         }
         Spacer(modifier = Modifier.height(5.dp))
         Text(
-            text = discipline,
+            text = data.discipline,
             fontSize = 20.sp,
             color = MaterialTheme.colorScheme.primary,
             fontWeight = FontWeight.Bold
         )
         Text(
-            text = "$minutes ¤ $intensity",
+            text = "${data.minutes} ¤ ${data.intensity}",
             color = MaterialTheme.colorScheme.secondary,
             fontSize = 12.sp,
             fontWeight = FontWeight.SemiBold

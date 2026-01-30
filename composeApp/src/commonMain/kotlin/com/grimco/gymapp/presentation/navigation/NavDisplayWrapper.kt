@@ -7,7 +7,10 @@ import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.ui.NavDisplay
 import androidx.savedstate.serialization.SavedStateConfiguration
+import com.grimco.gymapp.presentation.screens.CreateRoutineScreen
+import com.grimco.gymapp.presentation.screens.LoginScreen
 import com.grimco.gymapp.presentation.screens.MainScreen
+import com.grimco.gymapp.presentation.screens.RoutineDetailScreen
 import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.polymorphic
 import kotlinx.serialization.modules.subclass
@@ -15,14 +18,13 @@ import kotlinx.serialization.modules.subclass
 
 @Composable
 fun NavDisplayWrapper(modifier: Modifier = Modifier) {
-
-
     val navBackStack = rememberNavBackStack(
         configuration = SavedStateConfiguration{
             serializersModule = SerializersModule{
                 polymorphic(NavKey::class) {
                     subclass(Route.Main::class)
                     subclass(Route.Login::class)
+                    subclass(Route.RoutineMaker::class)
                 }
             }
         },
@@ -35,16 +37,25 @@ fun NavDisplayWrapper(modifier: Modifier = Modifier) {
         entryProvider = entryProvider {
 
             entry<Route.Main> {
-                MainScreen()
+                MainScreen(
+                    onTraining = {
+                        navBackStack.add(Route.RoutineDetail(routineId = it.id, routineName = it.discipline, minutes = it.minutes))
+                    }
+                )
+            }
+            entry<Route.Login> {
+                LoginScreen()
+            }
+            entry<Route.RoutineMaker> {
+                CreateRoutineScreen()
             }
 
-            entry<Route.Login> {
-
+            entry<Route.RoutineDetail> { navBackStack ->
+                RoutineDetailScreen(navBackStack.routineId, navBackStack.routineName, navBackStack.minutes)
             }
 
         },
         modifier = modifier
     )
-
 
 }
