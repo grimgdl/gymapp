@@ -71,8 +71,6 @@ fun RoutineDetailScreen(
                 )
             }
 
-
-
             Column(
                 modifier = Modifier.padding(start = 20.dp)
             ) {
