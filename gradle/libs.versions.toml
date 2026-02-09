@@ -21,6 +21,7 @@ serialization = "1.9.0"
 coil = "3.3.0"
 
 ktor-engine = "3.3.3"
+koinBom = "4.1.1"
 
 [libraries]
 components-resources = { module = "org.jetbrains.compose.components:components-resources", version.ref = "composeMultiplatform" }
@@ -56,7 +57,15 @@ material3 = { module = "org.jetbrains.compose.material3:material3", version.ref 
 runtime = { module = "org.jetbrains.compose.runtime:runtime", version.ref = "composeMultiplatform" }
 ui = { module = "org.jetbrains.compose.ui:ui", version.ref = "composeMultiplatform" }
 ui-tooling-preview = { module = "org.jetbrains.compose.ui:ui-tooling-preview", version.ref = "composeMultiplatform" }
+ui-tooling = { module = "org.jetbrains.compose.ui:ui-tooling", version.ref = "composeMultiplatform" }
 
+
+#koin
+koin-bom = { module = "io.insert-koin:koin-bom", version.ref = "koinBom"}
+koin-core = { module = "io.insert-koin:koin-core"}
+koin-compose = { module = "io.insert-koin:koin-compose"}
+koin-compose-viewmodel = { module = "io.insert-koin:koin-compose-viewmodel"}
+koin-compose-viewmodel-navigation = { module = "io.insert-koin:koin-compose-viewmodel-navigation"}
 
 
 [plugins]

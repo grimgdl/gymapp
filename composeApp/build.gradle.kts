@@ -28,7 +28,8 @@ kotlin {
     
     sourceSets {
         androidMain.dependencies {
-            implementation(compose.preview)
+            implementation(libs.ui.tooling.preview)
+            implementation(libs.ui.tooling)
             implementation(libs.androidx.activity.compose)
 
             implementation(libs.ktor.engine.android)
@@ -53,6 +54,15 @@ kotlin {
             //coil
             implementation(libs.coil.compose)
             implementation(libs.coil.network)
+
+            //koin
+            implementation(project.dependencies.platform(libs.koin.bom))
+            implementation(libs.koin.core)
+            implementation(libs.koin.compose)
+            implementation(libs.koin.compose.viewmodel)
+            implementation(libs.koin.compose.viewmodel.navigation)
+
+
 
         }
         commonTest.dependencies {
@@ -93,6 +103,6 @@ android {
 }
 
 dependencies {
-    debugImplementation(compose.uiTooling)
+
 }
 

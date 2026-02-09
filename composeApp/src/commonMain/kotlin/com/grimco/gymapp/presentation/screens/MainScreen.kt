@@ -2,7 +2,6 @@ package com.grimco.gymapp.presentation.screens
 
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -14,7 +13,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
-import androidx.compose.material.icons.filled.Doorbell
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -25,28 +23,29 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil3.compose.AsyncImage
+import com.grimco.gymapp.data.di.getModule
 import com.grimco.gymapp.data.model.Training
 import com.grimco.gymapp.presentation.components.CardWorkout
 import com.grimco.gymapp.presentation.components.FavoriteTraining
 import com.grimco.gymapp.presentation.components.StatComponent
+import com.grimco.gymapp.presentation.viewmodel.MainViewmodel
 import io.ktor.utils.io.InternalAPI
+import org.koin.compose.KoinApplication
+import org.koin.compose.viewmodel.koinViewModel
 
 
 @OptIn(InternalAPI::class)
-@Preview(showBackground = true)
 @Composable
 fun MainScreen(
     modifier: Modifier = Modifier,
-    onTraining: (training: Training) -> Unit
+    onTraining: (training: Training) -> Unit = {},
+    viewmodel: MainViewmodel = koinViewModel()
 ) {
 
     val scrollState = rememberScrollState()
@@ -128,7 +127,7 @@ fun MainScreen(
 
             TextButton(onClick = {}) {
                 Text(
-                    "See all",
+                    "See All",
                     color = MaterialTheme.colorScheme.tertiary,
                     fontWeight = FontWeight.Bold
                 )
@@ -155,4 +154,14 @@ fun MainScreen(
         CardWorkout()
     }
 
+}
+
+@Preview(showSystemUi = true)
+@Composable
+fun MyPreview() {
+    KoinApplication(application = {
+        modules(getModule())
+    }){
+        MainScreen()
+    }
 }
