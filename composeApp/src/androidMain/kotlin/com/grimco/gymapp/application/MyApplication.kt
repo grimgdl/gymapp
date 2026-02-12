@@ -1,7 +1,8 @@
 package com.grimco.gymapp.application
 
 import android.app.Application
-import com.grimco.gymapp.data.di.getModule
+import com.grimco.gymapp.data.di.databaseModule
+import com.grimco.gymapp.data.di.platformModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 
@@ -12,7 +13,7 @@ class MyApplication: Application() {
 
         startKoin {
             androidContext(this@MyApplication)
-            modules(getModule())
+            modules(platformModule, databaseModule)
         }
     }
 }

@@ -27,16 +27,15 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.grimco.gymapp.data.di.getModule
 import com.grimco.gymapp.data.model.Training
 import com.grimco.gymapp.presentation.components.CardWorkout
 import com.grimco.gymapp.presentation.components.FavoriteTraining
 import com.grimco.gymapp.presentation.components.StatComponent
 import com.grimco.gymapp.presentation.viewmodel.MainViewmodel
 import io.ktor.utils.io.InternalAPI
-import org.koin.compose.KoinApplication
 import org.koin.compose.viewmodel.koinViewModel
 
 
@@ -156,12 +155,12 @@ fun MainScreen(
 
 }
 
+
+@PreviewLightDark
 @Preview(showSystemUi = true)
 @Composable
 fun MyPreview() {
-    KoinApplication(application = {
-        modules(getModule())
-    }){
-        MainScreen()
+    Row {
+        Text("hola")
     }
 }

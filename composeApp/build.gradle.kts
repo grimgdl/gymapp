@@ -29,10 +29,8 @@ kotlin {
     
     sourceSets {
         androidMain.dependencies {
-            implementation(libs.ui.tooling.preview)
             implementation(libs.ui.tooling)
             implementation(libs.androidx.activity.compose)
-
             implementation(libs.ktor.engine.android)
         }
         commonMain.dependencies {
@@ -108,10 +106,7 @@ android {
 }
 
 dependencies {
-
-    add("kspAndroid", libs.androidx.room.compiler)
-    add("kspIosSimulatorArm64", libs.androidx.room.compiler)
-    add("kspIosArm64", libs.androidx.room.compiler)
+    ksp(libs.androidx.room.compiler)
 }
 
 room {

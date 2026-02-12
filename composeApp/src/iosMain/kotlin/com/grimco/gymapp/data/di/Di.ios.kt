@@ -1,7 +1,9 @@
 package com.grimco.gymapp.data.di
 
 import org.koin.core.module.Module
+import org.koin.dsl.module
 
-actual fun getModule(): Module {
-    TODO("Not yet implemented")
+
+actual val platformModule: Module = module {
+
 }
