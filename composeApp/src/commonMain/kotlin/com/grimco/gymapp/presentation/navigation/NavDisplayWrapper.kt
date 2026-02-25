@@ -8,9 +8,11 @@ import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.ui.NavDisplay
 import androidx.savedstate.serialization.SavedStateConfiguration
 import com.grimco.gymapp.presentation.screens.CreateRoutineScreen
+import com.grimco.gymapp.presentation.screens.EditTrainingScreen
 import com.grimco.gymapp.presentation.screens.LoginScreen
 import com.grimco.gymapp.presentation.screens.MainScreen
 import com.grimco.gymapp.presentation.screens.RoutineDetailScreen
+import com.grimco.gymapp.presentation.screens.TrainingListScreen
 import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.polymorphic
 import kotlinx.serialization.modules.subclass
@@ -40,6 +42,9 @@ fun NavDisplayWrapper(modifier: Modifier = Modifier) {
                 MainScreen(
                     onTraining = {
                         navBackStack.add(Route.RoutineDetail(routineId = it.id, routineName = it.discipline, minutes = it.minutes))
+                    },
+                    onNavigation = {
+                        navBackStack.add(it)
                     }
                 )
             }
@@ -53,6 +58,18 @@ fun NavDisplayWrapper(modifier: Modifier = Modifier) {
             entry<Route.RoutineDetail> { navBackStack ->
                 RoutineDetailScreen(navBackStack.routineId, navBackStack.routineName, navBackStack.minutes)
             }
+            entry<Route.TrainingList> {
+                TrainingListScreen(
+                    onEdit = {
+                        navBackStack.add(Route.EditTraining(it.training.id))
+                    }
+                )
+            }
+
+            entry<Route.EditTraining>{ back ->
+                EditTrainingScreen(back.idTraining)
+            }
+
 
         },
         modifier = modifier

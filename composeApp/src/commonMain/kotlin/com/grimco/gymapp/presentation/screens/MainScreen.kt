@@ -30,10 +30,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.grimco.gymapp.data.model.Training
+import com.grimco.gymapp.data.dtos.TrainingDTO
 import com.grimco.gymapp.presentation.components.CardWorkout
 import com.grimco.gymapp.presentation.components.FavoriteTraining
 import com.grimco.gymapp.presentation.components.StatComponent
+import com.grimco.gymapp.presentation.navigation.Route
 import com.grimco.gymapp.presentation.viewmodel.MainViewmodel
 import io.ktor.utils.io.InternalAPI
 import org.koin.compose.viewmodel.koinViewModel
@@ -43,7 +44,8 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 fun MainScreen(
     modifier: Modifier = Modifier,
-    onTraining: (training: Training) -> Unit = {},
+    onTraining: (training: TrainingDTO) -> Unit = {},
+    onNavigation: (route: Route) -> Unit = {},
     viewmodel: MainViewmodel = koinViewModel()
 ) {
 
@@ -52,10 +54,10 @@ fun MainScreen(
 
     val favoriteList = remember {
         listOf(
-            Training(discipline = "Back", image = "https://www.mensfitness.com/.image/w_750,q_auto:good,c_limit/MjEzNzgzNTQ5NTIwNjUyMTI1/athlete-muscular-fitness-male-model-pulling-up-on-horizontal-bar.jpg?arena_f_auto", minutes = "25 mins", intensity = "High power"),
-            Training(discipline = "legs", image = "https://cdn.muscleandstrength.com/sites/default/files/images/articles/leg-training-for-women-split-squat.jpg", minutes = "15 mins", intensity = "middle power"),
-            Training(discipline = "Arm", image = "https://www.trainheroic.com/wp-content/uploads/2023/01/AdobeStock_298511434-TH-jpg.webp", minutes = "13 mins", intensity = "High power"),
-            Training(discipline = "chest", image = "https://cdn.muscleandstrength.com/sites/default/files/field/feature-image/workout/10mass_feature.jpg", minutes = "15 mins", intensity = "High power")
+            TrainingDTO(discipline = "Back", image = "https://www.mensfitness.com/.image/w_750,q_auto:good,c_limit/MjEzNzgzNTQ5NTIwNjUyMTI1/athlete-muscular-fitness-male-model-pulling-up-on-horizontal-bar.jpg?arena_f_auto", minutes = "25 mins", intensity = "High power"),
+            TrainingDTO(discipline = "legs", image = "https://cdn.muscleandstrength.com/sites/default/files/images/articles/leg-training-for-women-split-squat.jpg", minutes = "15 mins", intensity = "middle power"),
+            TrainingDTO(discipline = "Arm", image = "https://www.trainheroic.com/wp-content/uploads/2023/01/AdobeStock_298511434-TH-jpg.webp", minutes = "13 mins", intensity = "High power"),
+            TrainingDTO(discipline = "chest", image = "https://cdn.muscleandstrength.com/sites/default/files/field/feature-image/workout/10mass_feature.jpg", minutes = "15 mins", intensity = "High power")
         )
     }
 
@@ -124,7 +126,11 @@ fun MainScreen(
                 )
             )
 
-            TextButton(onClick = {}) {
+            TextButton(
+                onClick = {
+                    onNavigation(Route.TrainingList)
+                }
+            ) {
                 Text(
                     "See All",
                     color = MaterialTheme.colorScheme.tertiary,

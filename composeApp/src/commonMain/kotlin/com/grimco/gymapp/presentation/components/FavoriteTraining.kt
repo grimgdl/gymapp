@@ -7,14 +7,14 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.grimco.gymapp.data.model.Training
+import com.grimco.gymapp.data.dtos.TrainingDTO
 
 
 @Composable
 fun FavoriteTraining(
-    favoriteList: List<Training>,
+    favoriteList: List<TrainingDTO>,
     modifier: Modifier = Modifier,
-    onClick: (data: Training) -> Unit
+    onClick: (data: TrainingDTO) -> Unit
 ) {
     LazyRow(
         modifier = modifier

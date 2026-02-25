@@ -2,10 +2,10 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "5d0d61914c140029c32478dd124fdc73",
+    "identityHash": "27b6d3c167876a73696c7eef14180ab2",
     "entities": [
       {
-        "tableName": "TrainingEntity",
+        "tableName": "trainings",
         "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `discipline` TEXT NOT NULL, `image` TEXT NOT NULL, `timeOperation` INTEGER NOT NULL, `intensity` TEXT NOT NULL)",
         "fields": [
           {
@@ -45,11 +45,60 @@
             "id"
           ]
         }
+      },
+      {
+        "tableName": "exercises",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        }
+      },
+      {
+        "tableName": "training_exercises",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`idTraining` INTEGER NOT NULL, `idExercise` INTEGER NOT NULL, PRIMARY KEY(`idTraining`, `idExercise`))",
+        "fields": [
+          {
+            "fieldPath": "idTraining",
+            "columnName": "idTraining",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "idExercise",
+            "columnName": "idExercise",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "idTraining",
+            "idExercise"
+          ]
+        }
       }
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '5d0d61914c140029c32478dd124fdc73')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '27b6d3c167876a73696c7eef14180ab2')"
     ]
   }
 }

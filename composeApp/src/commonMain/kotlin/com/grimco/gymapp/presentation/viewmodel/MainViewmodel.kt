@@ -1,15 +1,14 @@
 package com.grimco.gymapp.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
-import com.grimco.gymapp.data.service.TrainingService
+import androidx.lifecycle.viewModelScope
+import com.grimco.gymapp.data.dao.TrainingDao
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.IO
+import kotlinx.coroutines.launch
 
 class MainViewmodel(
-    private val service: TrainingService
+    private val trainingDao: TrainingDao
 ): ViewModel() {
-
-    init {
-        println("list")
-
-    }
 
 }

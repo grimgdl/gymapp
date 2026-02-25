@@ -5,11 +5,15 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.grimco.gymapp.data.local.AppDatabase
 import com.grimco.gymapp.data.local.DATABASE_NAME
+import kotlinx.coroutines.Dispatchers
 
 
 fun getDatabaseBuilder(ctx: Context): RoomDatabase.Builder<AppDatabase> {
     val appContext = ctx.applicationContext
     val dbFile = appContext.getDatabasePath(DATABASE_NAME)
-    return Room.databaseBuilder<AppDatabase>(context = appContext, name = dbFile.absolutePath)
+    return Room.databaseBuilder<AppDatabase>(
+        context = appContext,
+        name = dbFile.absolutePath
+    )
 }
 
