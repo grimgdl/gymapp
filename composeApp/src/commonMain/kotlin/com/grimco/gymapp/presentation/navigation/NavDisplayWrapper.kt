@@ -27,6 +27,9 @@ fun NavDisplayWrapper(modifier: Modifier = Modifier) {
                     subclass(Route.Main::class)
                     subclass(Route.Login::class)
                     subclass(Route.RoutineMaker::class)
+                    subclass(Route.RoutineDetail::class)
+                    subclass(Route.TrainingList::class)
+                    subclass(Route.EditTraining::class)
                 }
             }
         },

@@ -1,6 +1,7 @@
 package com.grimco.gymapp.data.dao
 
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
@@ -16,9 +17,16 @@ import kotlinx.coroutines.flow.Flow
 interface TrainingDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(item: TrainingEntity)
-
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertExercise(exercise: ExercisesEntity)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertTrainingExercise(trainingExercisesEntity: TrainingExercisesEntity)
+
+
+    @Query("select * from exercises")
+    fun getExercises(): Flow<List<ExercisesEntity>>
+
     @Query("select * from trainings")
     fun getAll(): Flow<List<TrainingEntity>>
 
@@ -34,5 +42,14 @@ interface TrainingDao {
     @Query("select * from trainings where id = :id")
     fun getExerciseListById(id: Long): Flow<TrainingExercise?>
 
+    @Transaction
+    suspend fun addExercisesToTraining(idTraining: Long, exercise: ExercisesEntity ) {
+        insertTrainingExercise(TrainingExercisesEntity(
+            idTraining = idTraining,
+            idExercise = exercise.id
+        ))
+    }
 
+    @Delete
+    suspend fun deleteTrainingExercise(trainingExercisesEntity: TrainingExercisesEntity)
 }
