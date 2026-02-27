@@ -4,8 +4,12 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Card
 import androidx.compose.material3.Checkbox
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -21,11 +25,9 @@ import com.grimco.gymapp.data.dtos.Exercise
 @Composable
 fun ExerciseCardSelect(
     exercise: Exercise,
-    isSelected: Boolean = false,
-    onCheck: (Boolean) -> Unit = {},
+    onAdd: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
-    var isChecked by remember(isSelected) { mutableStateOf(isSelected) }
     Card(
         modifier = modifier
             .padding(bottom = 3.dp)
@@ -36,13 +38,9 @@ fun ExerciseCardSelect(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(text = exercise.name)
-            Checkbox(
-                checked = isChecked,
-                onCheckedChange = {
-                    isChecked = it
-                    onCheck(it)
-                }
-            )
+            IconButton(onClick = onAdd) {
+                Icon(imageVector = Icons.Default.Add, contentDescription = null)
+            }
         }
     }
 

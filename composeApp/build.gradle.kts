@@ -65,6 +65,8 @@ kotlin {
             implementation(libs.androidx.room.runtime)
             implementation(libs.androidx.sqlite.bundle)
 
+            implementation(libs.mpfilepicker)
+
 
 
         }

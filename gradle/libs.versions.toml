@@ -15,6 +15,7 @@ kotlin = "2.3.0"
 
 material3 = "1.9.0"
 materialIconsCore = "1.7.3"
+mpfilepicker = "3.1.0"
 nav3Compose = "1.0.0-alpha06"
 serialization = "1.9.0"
 
@@ -57,6 +58,7 @@ ktor-engine-android = { module = "io.ktor:ktor-client-android", version.ref = "k
 material-icons-core = { module = "org.jetbrains.compose.material:material-icons-core", version.ref = "materialIconsCore" }
 material-icons-extended = { module = "org.jetbrains.compose.material:material-icons-extended", version.ref = "materialIconsCore" }
 material3 = { module = "org.jetbrains.compose.material3:material3", version.ref = "material3" }
+mpfilepicker = { module = "com.darkrockstudios:mpfilepicker", version.ref = "mpfilepicker" }
 runtime = { module = "org.jetbrains.compose.runtime:runtime", version.ref = "composeMultiplatform" }
 ui = { module = "org.jetbrains.compose.ui:ui", version.ref = "composeMultiplatform" }
 ui-tooling-preview = { module = "org.jetbrains.compose.ui:ui-tooling-preview", version.ref = "composeMultiplatform" }

@@ -13,9 +13,7 @@ import com.grimco.gymapp.data.model.ExercisesEntity
 @Composable
 fun ExerciseCardContainer(
     list: List<ExercisesEntity>,
-    onCheck: (Boolean) -> Unit = {},
     onAdd: (ExercisesEntity) -> Unit,
-    onDelete: (ExercisesEntity) -> Unit,
     modifier: Modifier = Modifier
 ) {
     LazyColumn(
@@ -28,9 +26,9 @@ fun ExerciseCardContainer(
                     id = exercise.id,
                     name = exercise.name
                 ),
-                onCheck = {
-                    if (it) onAdd(exercise) else onDelete(exercise)
-                }
+               onAdd = {
+                   onAdd(exercise)
+               }
             )
         }
     }
