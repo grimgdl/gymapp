@@ -1,6 +1,5 @@
 package com.grimco.gymapp.presentation.screens
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -8,7 +7,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -22,7 +20,6 @@ import androidx.compose.material.icons.filled.Image
 import androidx.compose.material3.BasicAlertDialog
 import androidx.compose.material3.BottomSheetScaffold
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -43,23 +40,21 @@ import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.painter.BitmapPainter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import coil3.BitmapImage
-import coil3.Uri
 import coil3.compose.AsyncImage
-import coil3.compose.rememberAsyncImagePainter
-import com.darkrockstudios.libraries.mpfilepicker.FilePicker
 import com.grimco.gymapp.data.dtos.Exercise
 import com.grimco.gymapp.data.model.TrainingExercisesEntity
 import com.grimco.gymapp.presentation.components.ExerciseCard
 import com.grimco.gymapp.presentation.components.ExerciseCardContainer
 import com.grimco.gymapp.presentation.components.TextHeader
 import com.grimco.gymapp.presentation.viewmodel.EditTrainingViewModel
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.IO
+import com.mohamedrejeb.calf.core.LocalPlatformContext
+import com.mohamedrejeb.calf.io.readByteArray
+import com.mohamedrejeb.calf.picker.FilePickerFileType
+import com.mohamedrejeb.calf.picker.FilePickerSelectionMode
+import com.mohamedrejeb.calf.picker.rememberFilePickerLauncher
 import kotlinx.coroutines.launch
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
@@ -86,6 +81,20 @@ fun EditTrainingScreen(
         bottomSheetState = rememberStandardBottomSheetState(
             initialValue = SheetValue.PartiallyExpanded
         )
+    )
+
+    val context = LocalPlatformContext.current
+
+    val pickerLauncher = rememberFilePickerLauncher(
+        type = FilePickerFileType.Image,
+        selectionMode = FilePickerSelectionMode.Single,
+        onResult = { files ->
+            scope.launch {
+                files.firstOrNull()?.let { file ->
+                    viewModel.saveImage(idTraining,file.readByteArray(context))
+                }
+            }
+        }
     )
 
     var canSwipe by remember { mutableStateOf(false) }
@@ -139,7 +148,7 @@ fun EditTrainingScreen(
                     .size(150.dp)
                     .border(width = 2.dp, color = Color.Gray)
                     .clickable {
-                        showFilePicker = true
+                        pickerLauncher.launch()
                     }
             ){
                 Icon(imageVector = Icons.Default.Image, contentDescription = null)
@@ -200,17 +209,6 @@ fun EditTrainingScreen(
                             }
                         )
                     }
-                }
-            }
-        }
-
-        val fileType = listOf("jpg","png","webp")
-        FilePicker(show = showFilePicker, fileExtensions = fileType) { file ->
-            showFilePicker = false
-
-            file?.let {
-                scope.launch{
-                    viewModel.setImage(it.platformFile)
                 }
             }
         }

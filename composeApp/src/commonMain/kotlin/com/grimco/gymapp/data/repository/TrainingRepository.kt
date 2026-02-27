@@ -14,6 +14,15 @@ class TrainingRepository(
         return trainingDao.getExerciseList()
     }
 
+    fun getTrainingList(): Flow<List<TrainingEntity>> {
+        return trainingDao.getAll()
+    }
+
+    suspend fun updateImage(idTraining: Long, imagePath: String) {
+        val training = trainingDao.getTraining(idTraining)
+        trainingDao.insert(training.copy(image = imagePath))
+    }
+
     fun getTrainingWithExercisesById(id: Long): Flow<TrainingExercise?> {
         return trainingDao.getExerciseListById(id)
     }

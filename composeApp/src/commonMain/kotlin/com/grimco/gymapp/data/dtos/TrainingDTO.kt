@@ -4,6 +4,7 @@ data class TrainingDTO(
     val id: Long = 0,
     val discipline: String,
     val image: String,
-    val minutes: String,
+    val timeOperation: Long = 0,
+    val minutes: String = "",
     val intensity: String
 )

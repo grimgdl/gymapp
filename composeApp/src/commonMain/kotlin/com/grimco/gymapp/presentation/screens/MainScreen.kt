@@ -20,6 +20,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -30,6 +31,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.grimco.gymapp.data.dtos.TrainingDTO
 import com.grimco.gymapp.presentation.components.CardWorkout
 import com.grimco.gymapp.presentation.components.FavoriteTraining
@@ -52,14 +54,8 @@ fun MainScreen(
     val scrollState = rememberScrollState()
     val name = remember { "Gustavo" }
 
-    val favoriteList = remember {
-        listOf(
-            TrainingDTO(discipline = "Back", image = "https://www.mensfitness.com/.image/w_750,q_auto:good,c_limit/MjEzNzgzNTQ5NTIwNjUyMTI1/athlete-muscular-fitness-male-model-pulling-up-on-horizontal-bar.jpg?arena_f_auto", minutes = "25 mins", intensity = "High power"),
-            TrainingDTO(discipline = "legs", image = "https://cdn.muscleandstrength.com/sites/default/files/images/articles/leg-training-for-women-split-squat.jpg", minutes = "15 mins", intensity = "middle power"),
-            TrainingDTO(discipline = "Arm", image = "https://www.trainheroic.com/wp-content/uploads/2023/01/AdobeStock_298511434-TH-jpg.webp", minutes = "13 mins", intensity = "High power"),
-            TrainingDTO(discipline = "chest", image = "https://cdn.muscleandstrength.com/sites/default/files/field/feature-image/workout/10mass_feature.jpg", minutes = "15 mins", intensity = "High power")
-        )
-    }
+    val trainings by viewmodel.trainings.collectAsStateWithLifecycle()
+
 
     Column(
         modifier = modifier.padding(16.dp)
@@ -142,7 +138,7 @@ fun MainScreen(
 
         Spacer(modifier = Modifier.height(30.dp))
 
-        FavoriteTraining(favoriteList = favoriteList) {
+        FavoriteTraining(favoriteList = trainings) {
             onTraining(it)
         }
 

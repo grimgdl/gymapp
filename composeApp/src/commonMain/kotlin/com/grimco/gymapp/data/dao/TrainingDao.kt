@@ -23,6 +23,8 @@ interface TrainingDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertTrainingExercise(trainingExercisesEntity: TrainingExercisesEntity)
 
+    @Query("select * from trainings where id=:id")
+    suspend fun getTraining(id: Long): TrainingEntity
 
     @Query("select * from exercises")
     fun getExercises(): Flow<List<ExercisesEntity>>

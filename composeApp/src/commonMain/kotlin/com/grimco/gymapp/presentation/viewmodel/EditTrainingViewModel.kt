@@ -6,8 +6,11 @@ import com.grimco.gymapp.data.dtos.TrainingExercise
 import com.grimco.gymapp.data.model.ExercisesEntity
 import com.grimco.gymapp.data.model.TrainingExercisesEntity
 import com.grimco.gymapp.data.repository.TrainingRepository
+import com.grimco.gymapp.domain.repository.ImageStorage
 import com.grimco.gymapp.presentation.utils.FlowEditableField
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.IO
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -25,7 +28,8 @@ import kotlinx.coroutines.launch
 @OptIn(FlowPreview::class)
 class EditTrainingViewModel(
     id: Long,
-    private val repository: TrainingRepository
+    private val repository: TrainingRepository,
+    private val imageStorage: ImageStorage
 ) : ViewModel() {
 
 
@@ -76,12 +80,16 @@ class EditTrainingViewModel(
             )
         }
     }
-
-    fun setImage(image: Any?) {
+    fun saveImage(idTraining: Long, image: ByteArray) {
         viewModelScope.launch {
-            _image.value = image
+            val path = imageStorage.saveImage("test", image)
+            path?.let {
+                repository.updateImage(idTraining, path)
+                _image.value = path
+            }
         }
     }
+
 
     fun deleteTrainingExercise(trainingExercisesEntity: TrainingExercisesEntity) {
         viewModelScope.launch {

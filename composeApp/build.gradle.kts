@@ -65,9 +65,7 @@ kotlin {
             implementation(libs.androidx.room.runtime)
             implementation(libs.androidx.sqlite.bundle)
 
-            implementation(libs.mpfilepicker)
-
-
+            implementation(libs.calf.file.picker)
 
         }
         commonTest.dependencies {
@@ -88,8 +86,8 @@ android {
         applicationId = "com.grimco.gymapp"
         minSdk = libs.versions.android.minSdk.get().toInt()
         targetSdk = libs.versions.android.targetSdk.get().toInt()
-        versionCode = 2
-        versionName = "0.1.3"
+        versionCode = 3
+        versionName = "alpha-0.1.4"
     }
     packaging {
         resources {
