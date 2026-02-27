@@ -27,6 +27,10 @@ class EditTrainingViewModel(
     id: Long,
     private val repository: TrainingRepository
 ) : ViewModel() {
+
+
+    private val _image = MutableStateFlow<Any?>(null)
+    val image: StateFlow<Any?> = _image
     val training: StateFlow<TrainingExercise?> = repository.getTrainingWithExercisesById(id)
         .stateIn(
             scope = viewModelScope,
@@ -61,6 +65,13 @@ class EditTrainingViewModel(
             repository.getExercises().collect { data ->
                 _exercises.value = data
             }
+        }
+    }
+
+
+    fun setImage(image: Any?) {
+        viewModelScope.launch {
+            _image.value = image
         }
     }
 

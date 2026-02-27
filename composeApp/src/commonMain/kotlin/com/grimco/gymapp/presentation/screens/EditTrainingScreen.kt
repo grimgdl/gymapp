@@ -73,7 +73,7 @@ fun EditTrainingScreen(
     val trainingState = rememberTextFieldState("")
 
     var showFilePicker by remember { mutableStateOf(false) }
-    var image by remember { mutableStateOf<Any?>(null) }
+    val image by viewModel.image.collectAsStateWithLifecycle()
 
     val scope = rememberCoroutineScope()
 
@@ -196,7 +196,7 @@ fun EditTrainingScreen(
 
                 file?.let {
                     scope.launch{
-                        image = it.platformFile
+                        viewModel.setImage(it.platformFile)
                     }
                 }
             }
