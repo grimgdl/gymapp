@@ -19,14 +19,17 @@ import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Image
+import androidx.compose.material3.BasicAlertDialog
 import androidx.compose.material3.BottomSheetScaffold
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.SheetValue
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.material3.rememberStandardBottomSheetState
 import androidx.compose.runtime.Composable
@@ -75,6 +78,8 @@ fun EditTrainingScreen(
     var showFilePicker by remember { mutableStateOf(false) }
     val image by viewModel.image.collectAsStateWithLifecycle()
 
+    var showDialogExercise by remember { mutableStateOf(false)}
+
     val scope = rememberCoroutineScope()
 
     val bottomSheetState = rememberBottomSheetScaffoldState(
@@ -88,117 +93,144 @@ fun EditTrainingScreen(
     BottomSheetScaffold(
         scaffoldState = bottomSheetState,
         sheetContent = {
-            if (canSwipe) {
-                val exercisesList by viewModel.exercises.collectAsStateWithLifecycle()
-                ExerciseCardContainer(
-                    exercisesList,
-                    onAdd = {
-                        scope.launch {
-                            viewModel.addExerciseTraining(idTraining, it)
-                        }
+            Column {
+                Row(
+                    modifier = Modifier.fillMaxWidth()
+                        .padding(16.dp)
+                    ,
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    TextHeader("Exercise list")
+
+                    TextButton(onClick = {
+                        showDialogExercise = true
+                    }) {
+                        Text("New Exercise", color = MaterialTheme.colorScheme.tertiary)
                     }
-                )
+                }
+
+                if (canSwipe) {
+                    val exercisesList by viewModel.exercises.collectAsStateWithLifecycle()
+                    ExerciseCardContainer(
+                        exercisesList,
+                        onAdd = {
+                            scope.launch {
+                                viewModel.addExerciseTraining(idTraining, it)
+                            }
+                        }
+                    )
+                }
+
             }
+
         },
         sheetPeekHeight = 0.dp,
         sheetSwipeEnabled = canSwipe
     ) {
-        Box(
-            modifier = Modifier.fillMaxSize()
+        Column(
+            modifier = modifier.padding(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Column(
-                modifier = modifier.padding(16.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
 
-                Box(
-                    contentAlignment = Alignment.Center,
-                    modifier = Modifier
-                        .size(200.dp)
-                        .border(width = 2.dp, color = Color.Gray)
-                        .clickable {
-                            showFilePicker = true
+            Box(
+                contentAlignment = Alignment.Center,
+                modifier = Modifier
+                    .size(150.dp)
+                    .border(width = 2.dp, color = Color.Gray)
+                    .clickable {
+                        showFilePicker = true
+                    }
+            ){
+                Icon(imageVector = Icons.Default.Image, contentDescription = null)
+                image?.let {
+                    AsyncImage(
+                        model = image,
+                        contentDescription = null,
+                        contentScale = ContentScale.Crop
+                    )
+                }
+            }
+
+            OutlinedTextField(
+                state = trainingState,
+                label = {
+                    Text("Training Name")
+                },
+                modifier = Modifier.fillMaxWidth()
+                    .padding(top = 20.dp)
+            )
+
+            Spacer(modifier = Modifier.height(40.dp))
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                TextHeader(text = "Exercise List")
+                IconButton(
+                    onClick = {
+                        canSwipe = true
+                        scope.launch {
+                            bottomSheetState.bottomSheetState.expand()
                         }
-                ){
-                    Icon(imageVector = Icons.Default.Image, contentDescription = null)
-                    image?.let {
-                        AsyncImage(
-                            model = image,
-                            contentDescription = null,
-                            contentScale = ContentScale.Crop
+                    }
+                ) {
+                    Icon(imageVector = Icons.Default.Add, contentDescription = null)
+                }
+            }
+
+            LazyColumn {
+                trainingList?.exercises?.let {
+                    items(items = it) { exercise ->
+                        ExerciseCard(
+                            Exercise(
+                                id = exercise.id,
+                                name = exercise.name
+                            ),
+                            onDelete = {
+                                scope.launch {
+                                    viewModel.deleteTrainingExercise(
+                                        TrainingExercisesEntity(
+                                            idTraining,
+                                            exercise.id
+                                        )
+                                    )
+                                }
+                            }
                         )
                     }
                 }
+            }
+        }
 
+        val fileType = listOf("jpg","png","webp")
+        FilePicker(show = showFilePicker, fileExtensions = fileType) { file ->
+            showFilePicker = false
+
+            file?.let {
+                scope.launch{
+                    viewModel.setImage(it.platformFile)
+                }
+            }
+        }
+
+        if (showDialogExercise) {
+            val exerciseState = rememberTextFieldState("")
+            BasicAlertDialog(
+                onDismissRequest = {
+                    showDialogExercise = false
+                    exerciseState.text.isNotEmpty().run {
+                        viewModel.insertExercise(exerciseState.text.toString())
+                    }
+                }
+            ){
                 OutlinedTextField(
-                    state = trainingState,
+                    state = exerciseState,
                     label = {
-                        Text("Training Name")
-                    },
-                    modifier = Modifier.fillMaxWidth()
-                        .padding(top = 20.dp)
+                        Text("New Exercise Name")
+                    }
                 )
-
-                Spacer(modifier = Modifier.height(40.dp))
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    TextHeader(text = "Exercise List")
-                    IconButton(
-                        onClick = {
-                            canSwipe = true
-                            scope.launch {
-                                bottomSheetState.bottomSheetState.expand()
-                            }
-                        }
-                    ) {
-                        Icon(imageVector = Icons.Default.Add, contentDescription = null)
-                    }
-                }
-
-                LazyColumn {
-                    trainingList?.exercises?.let {
-                        items(items = it) { exercise ->
-                            ExerciseCard(
-                                Exercise(
-                                    id = exercise.id,
-                                    name = exercise.name
-                                ),
-                                onDelete = {
-                                    scope.launch {
-                                        viewModel.deleteTrainingExercise(
-                                            TrainingExercisesEntity(
-                                                idTraining,
-                                                exercise.id
-                                            )
-                                        )
-                                    }
-                                }
-                            )
-                        }
-                    }
-                }
-
-            }
-
-            FloatingActionButton(
-                onClick = {},
-                modifier = Modifier.align(Alignment.BottomEnd).padding(16.dp)
-            ) {
-                Icon(Icons.Default.Add, contentDescription = null)
-            }
-
-            val fileType = listOf("jpg","png","webp")
-            FilePicker(show = showFilePicker, fileExtensions = fileType) { file ->
-                showFilePicker = false
-
-                file?.let {
-                    scope.launch{
-                        viewModel.setImage(it.platformFile)
-                    }
-                }
             }
         }
 

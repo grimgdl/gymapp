@@ -17,8 +17,9 @@ class TrainingRepository(
     fun getTrainingWithExercisesById(id: Long): Flow<TrainingExercise?> {
         return trainingDao.getExerciseListById(id)
     }
-
-
+    suspend fun insertExercise(exercisesEntity: ExercisesEntity) {
+        trainingDao.insertExercise(exercisesEntity)
+    }
     suspend fun updateTraining(trainingEntity: TrainingEntity) {
         trainingDao.insert(trainingEntity)
     }

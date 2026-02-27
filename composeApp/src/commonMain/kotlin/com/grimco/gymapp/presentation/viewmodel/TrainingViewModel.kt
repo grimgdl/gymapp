@@ -3,10 +3,12 @@ package com.grimco.gymapp.presentation.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.grimco.gymapp.data.dtos.TrainingExercise
+import com.grimco.gymapp.data.model.TrainingEntity
 import com.grimco.gymapp.data.repository.TrainingRepository
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 
 class TrainingViewModel(
     private val repository: TrainingRepository
@@ -19,4 +21,10 @@ class TrainingViewModel(
             started = SharingStarted.WhileSubscribed(5000),
             initialValue = emptyList()
         )
+
+    fun createTraining(trainingEntity: TrainingEntity) {
+        viewModelScope.launch {
+            repository.updateTraining(trainingEntity)
+        }
+    }
 }

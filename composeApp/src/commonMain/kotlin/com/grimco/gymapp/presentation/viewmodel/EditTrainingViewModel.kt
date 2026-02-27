@@ -67,7 +67,15 @@ class EditTrainingViewModel(
             }
         }
     }
-
+    fun insertExercise(name: String) {
+        viewModelScope.launch {
+            repository.insertExercise(
+                ExercisesEntity(
+                    name = name
+                )
+            )
+        }
+    }
 
     fun setImage(image: Any?) {
         viewModelScope.launch {

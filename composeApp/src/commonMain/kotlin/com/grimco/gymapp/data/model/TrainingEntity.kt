@@ -9,7 +9,7 @@ data class TrainingEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0,
     val discipline: String,
-    val image: String,
-    val timeOperation: Long,
-    val intensity: String
+    val image: String = "",
+    val timeOperation: Long = 10_000,
+    val intensity: String = "not yet"
 )
