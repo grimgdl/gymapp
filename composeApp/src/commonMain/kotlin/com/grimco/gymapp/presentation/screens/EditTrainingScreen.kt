@@ -57,7 +57,6 @@ import com.mohamedrejeb.calf.picker.FilePickerSelectionMode
 import com.mohamedrejeb.calf.picker.rememberFilePickerLauncher
 import kotlinx.coroutines.launch
 import org.koin.compose.viewmodel.koinViewModel
-import org.koin.core.parameter.parametersOf
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -65,13 +64,11 @@ fun EditTrainingScreen(
     idTraining: Long,
     modifier: Modifier = Modifier
 ) {
-    val viewModel: EditTrainingViewModel = koinViewModel(parameters = { parametersOf(idTraining) })
+
+    val viewModel: EditTrainingViewModel = koinViewModel()
     val discipline by viewModel.disciplineEditor.input.collectAsStateWithLifecycle()
     val trainingList by viewModel.training.collectAsStateWithLifecycle()
     val trainingState = rememberTextFieldState("")
-
-    var showFilePicker by remember { mutableStateOf(false) }
-    val image by viewModel.image.collectAsStateWithLifecycle()
 
     var showDialogExercise by remember { mutableStateOf(false)}
 
@@ -152,9 +149,9 @@ fun EditTrainingScreen(
                     }
             ){
                 Icon(imageVector = Icons.Default.Image, contentDescription = null)
-                image?.let {
+                trainingList?.let {
                     AsyncImage(
-                        model = image,
+                        model = it.training.image,
                         contentDescription = null,
                         contentScale = ContentScale.Crop
                     )
@@ -255,5 +252,10 @@ fun EditTrainingScreen(
     LaunchedEffect(Unit) {
         snapshotFlow { trainingState.text.toString() }
             .collect { viewModel.disciplineEditor.update(it) }
+    }
+
+
+    LaunchedEffect(idTraining) {
+        viewModel.setIdTraining(idTraining)
     }
 }

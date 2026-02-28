@@ -11,6 +11,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.FitnessCenter
 import androidx.compose.material.icons.filled.Pause
@@ -22,15 +24,24 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import coil3.compose.AsyncImage
+import com.grimco.gymapp.presentation.components.ExerciseRoutineCard
 import com.grimco.gymapp.presentation.components.TextHeader
+import com.grimco.gymapp.presentation.viewmodel.DetailTrainingViewModel
+import com.grimco.gymapp.presentation.viewmodel.TrainingViewModel
+import org.koin.compose.viewmodel.koinViewModel
+import org.koin.core.parameter.parametersOf
 
 @Composable
 @Preview
@@ -40,6 +51,10 @@ fun RoutineDetailScreen(
     minutes: String = "45 mins",
     modifier: Modifier = Modifier
 ) {
+
+    val viewModel: DetailTrainingViewModel = koinViewModel( parameters = { parametersOf(routineId) })
+    val training by viewModel.training.collectAsStateWithLifecycle()
+
     Column(
         modifier = modifier
             .padding(16.dp)
@@ -63,14 +78,15 @@ fun RoutineDetailScreen(
                     ),
                 contentAlignment = Alignment.Center
             ) {
-                Image(
-                    imageVector = Icons.Default.FitnessCenter,
-                    contentDescription = null,
-                    colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.primary),
-                    modifier = Modifier.size(48.dp)
-                )
-            }
 
+
+                AsyncImage(
+                    model = training?.training?.image,
+                    contentDescription = null,
+                    contentScale = ContentScale.Crop
+                )
+
+            }
             Column(
                 modifier = Modifier.padding(start = 20.dp)
             ) {
@@ -120,9 +136,15 @@ fun RoutineDetailScreen(
             modifier = Modifier.fillMaxWidth()
         ){
             TextHeader(text = "Exercises")
-            Text(text = "4 TOTAL", color = MaterialTheme.colorScheme.secondary)
+            Text(text = "${training?.exercises?.size} TOTAL", color = MaterialTheme.colorScheme.secondary)
         }
-
-
+        Spacer(modifier = Modifier.height(10.dp))
+        LazyColumn {
+            training?.exercises?.let {
+                items(items = it) { item ->
+                    ExerciseRoutineCard(item.name)
+                }
+            }
+        }
     }
 }

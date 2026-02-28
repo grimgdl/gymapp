@@ -86,8 +86,8 @@ android {
         applicationId = "com.grimco.gymapp"
         minSdk = libs.versions.android.minSdk.get().toInt()
         targetSdk = libs.versions.android.targetSdk.get().toInt()
-        versionCode = 3
-        versionName = "alpha-0.1.4"
+        versionCode = 5
+        versionName = "alpha-0.1.5"
     }
     packaging {
         resources {
@@ -99,10 +99,12 @@ android {
         release {
             isMinifyEnabled = true
             isShrinkResources = true
-//            proguardFiles(
-//                getDefaultProguardFile("proguard-android-optimization.txt"),
-//                "proguard-rules.pro"
-//            )
+
+            proguardFile(getDefaultProguardFile("proguard-android-optimize.txt"))
+            ndk {
+                debugSymbolLevel = "FULL"
+            }
+
         }
 
     }

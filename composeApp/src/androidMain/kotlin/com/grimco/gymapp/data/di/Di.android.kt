@@ -6,6 +6,7 @@ import com.grimco.gymapp.data.local.AppDatabase
 import com.grimco.gymapp.data.repository.AndroidStorage
 import com.grimco.gymapp.data.repository.TrainingRepository
 import com.grimco.gymapp.domain.repository.ImageStorage
+import com.grimco.gymapp.presentation.viewmodel.DetailTrainingViewModel
 import com.grimco.gymapp.presentation.viewmodel.EditTrainingViewModel
 import com.grimco.gymapp.presentation.viewmodel.MainViewmodel
 import com.grimco.gymapp.presentation.viewmodel.TrainingViewModel
@@ -27,4 +28,5 @@ actual val platformModule: Module = module {
     viewModelOf(::MainViewmodel)
     viewModelOf(::TrainingViewModel)
     viewModelOf(::EditTrainingViewModel)
+    viewModelOf(::DetailTrainingViewModel)
 }
