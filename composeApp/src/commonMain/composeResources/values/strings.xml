@@ -12,5 +12,8 @@
     <string name="next_workout">Next Workout</string>
     <string name="upcoming_session">UPCOMING SESSION</string>
     <string name="start_workout">START WORKOUT</string>
+    <string name="training_list">Training List</string>
+    <string name="new_training">New Training</string>
+
 
 </resources>

@@ -12,4 +12,6 @@
     <string name="next_workout">Siguiente Entrenamiento</string>
     <string name="upcoming_session">PRÓXIMA SESIÓN</string>
     <string name="start_workout">INICIAR ENTRENAMIENTO</string>
+    <string name="training_list">Lista Entrenamiento</string>
+    <string name="new_training">Nuevo</string>
 </resources>

@@ -39,7 +39,11 @@ import com.grimco.gymapp.data.dtos.TrainingExercise
 import com.grimco.gymapp.data.model.TrainingEntity
 import com.grimco.gymapp.presentation.components.TextHeader
 import com.grimco.gymapp.presentation.viewmodel.TrainingViewModel
+import gymapp.composeapp.generated.resources.Res
+import gymapp.composeapp.generated.resources.new_training
+import gymapp.composeapp.generated.resources.training_list
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
 
@@ -62,12 +66,12 @@ fun TrainingListScreen(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            TextHeader("Training list")
+            TextHeader(stringResource(Res.string.training_list))
 
             TextButton(onClick = {
                 showDialog = true
             }) {
-                Text("New Training", color = MaterialTheme.colorScheme.tertiary)
+                Text(stringResource(Res.string.new_training), color = MaterialTheme.colorScheme.tertiary)
             }
 
         }
