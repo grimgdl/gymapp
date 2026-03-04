@@ -32,6 +32,8 @@ import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.grimco.gymapp.data.di.databaseModule
+import com.grimco.gymapp.data.di.platformModule
 import com.grimco.gymapp.data.dtos.TrainingDTO
 import com.grimco.gymapp.presentation.components.CardWorkout
 import com.grimco.gymapp.presentation.components.FavoriteTraining
@@ -39,6 +41,7 @@ import com.grimco.gymapp.presentation.components.StatComponent
 import com.grimco.gymapp.presentation.navigation.Route
 import com.grimco.gymapp.presentation.viewmodel.MainViewmodel
 import io.ktor.utils.io.InternalAPI
+import org.koin.compose.KoinApplication
 import org.koin.compose.viewmodel.koinViewModel
 
 
@@ -52,10 +55,8 @@ fun MainScreen(
 ) {
 
     val scrollState = rememberScrollState()
-    val name = remember { "Gustavo" }
-
+    val name = remember { "User Name" }
     val trainings by viewmodel.trainings.collectAsStateWithLifecycle()
-
 
     Column(
         modifier = modifier.padding(16.dp)
@@ -162,7 +163,11 @@ fun MainScreen(
 @Preview(showSystemUi = true)
 @Composable
 fun MyPreview() {
-    Row {
-        Text("hola")
+    KoinApplication(
+        application = {
+            modules(platformModule, databaseModule)
+        }
+    ){
+        MainScreen()
     }
 }
