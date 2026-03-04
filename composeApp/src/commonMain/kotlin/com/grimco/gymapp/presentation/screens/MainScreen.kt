@@ -32,16 +32,18 @@ import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.grimco.gymapp.data.di.databaseModule
-import com.grimco.gymapp.data.di.platformModule
 import com.grimco.gymapp.data.dtos.TrainingDTO
 import com.grimco.gymapp.presentation.components.CardWorkout
 import com.grimco.gymapp.presentation.components.FavoriteTraining
 import com.grimco.gymapp.presentation.components.StatComponent
 import com.grimco.gymapp.presentation.navigation.Route
 import com.grimco.gymapp.presentation.viewmodel.MainViewmodel
+import gymapp.composeapp.generated.resources.Res
+import gymapp.composeapp.generated.resources.favorite
+import gymapp.composeapp.generated.resources.next_workout
+import gymapp.composeapp.generated.resources.see_all
 import io.ktor.utils.io.InternalAPI
-import org.koin.compose.KoinApplication
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
 
@@ -116,7 +118,7 @@ fun MainScreen(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = "Favorite Routines", style = TextStyle(
+                text = stringResource(Res.string.favorite), style = TextStyle(
                     fontSize = 22.sp,
                     color = MaterialTheme.colorScheme.primary,
                     fontWeight = FontWeight.Bold
@@ -129,7 +131,7 @@ fun MainScreen(
                 }
             ) {
                 Text(
-                    "See All",
+                    stringResource(Res.string.see_all),
                     color = MaterialTheme.colorScheme.tertiary,
                     fontWeight = FontWeight.Bold
                 )
@@ -146,7 +148,7 @@ fun MainScreen(
         Spacer(modifier = Modifier.height(30.dp))
 
         Text(
-            text = "Next Workout",
+            text = stringResource(Res.string.next_workout),
             style = TextStyle(
                 fontSize = 22.sp,
                 fontWeight = FontWeight.Bold

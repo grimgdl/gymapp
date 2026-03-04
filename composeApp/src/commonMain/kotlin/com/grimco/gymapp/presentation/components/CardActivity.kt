@@ -18,6 +18,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import gymapp.composeapp.generated.resources.Res
+import gymapp.composeapp.generated.resources.activity
+import gymapp.composeapp.generated.resources.calories
+import gymapp.composeapp.generated.resources.days
+import gymapp.composeapp.generated.resources.mins
+import gymapp.composeapp.generated.resources.weekly_goal
+import org.jetbrains.compose.resources.stringResource
 
 
 @Composable
@@ -35,7 +42,7 @@ fun CardActivity(modifier: Modifier = Modifier) {
                 modifier = Modifier.fillMaxWidth()
             ){
                 Text(
-                    text = "Activity",
+                    text = stringResource(Res.string.activity),
                     style = TextStyle(
                         color = MaterialTheme.colorScheme.primary,
                         fontWeight = FontWeight.Bold,
@@ -43,7 +50,7 @@ fun CardActivity(modifier: Modifier = Modifier) {
                     )
                 )
                 Text(
-                    text = "Weekly Goal",
+                    text = stringResource(Res.string.weekly_goal),
                     style = TextStyle(
                         color = MaterialTheme.colorScheme.tertiary,
                         fontWeight = FontWeight.SemiBold,
@@ -60,21 +67,21 @@ fun CardActivity(modifier: Modifier = Modifier) {
             ) {
                 
                 CircularProgress(
-                    title = "CALORIES",
+                    title = stringResource(Res.string.calories),
                     progress = .7f,
                     progressColor = Color(0xFF1348EA)
 
                 )
 
                 CircularProgress(
-                    title = "DAYS",
+                    title = stringResource(Res.string.days),
                     progress = .8f,
                     progressColor = Color(0xFF22D1EC)
 
                 )
 
                 CircularProgress(
-                    title = "MINS",
+                    title = stringResource(Res.string.mins),
                     progress = .4f,
                     progressColor = Color(0xFF34D198)
 

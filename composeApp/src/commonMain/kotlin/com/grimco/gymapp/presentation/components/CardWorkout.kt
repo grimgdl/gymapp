@@ -24,6 +24,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import gymapp.composeapp.generated.resources.Res
+import gymapp.composeapp.generated.resources.start_workout
+import gymapp.composeapp.generated.resources.upcoming_session
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 @Preview
@@ -46,7 +50,7 @@ fun CardWorkout(modifier: Modifier = Modifier) {
             ){
                 Column {
                     Text(
-                        text = "UPCOMING SESSION",
+                        text = stringResource(Res.string.upcoming_session),
                         color = MaterialTheme.colorScheme.secondary,
                         fontWeight = FontWeight.SemiBold,
                         fontSize = 10.sp
@@ -92,7 +96,7 @@ fun CardWorkout(modifier: Modifier = Modifier) {
                 onClick = {},
                 modifier = Modifier.fillMaxWidth()
             ){
-                Text(text = "START WORKOUT")
+                Text(text = stringResource(Res.string.start_workout))
             }
 
         }

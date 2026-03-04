@@ -14,8 +14,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.FitnessCenter
-import androidx.compose.material.icons.filled.Pause
+import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Stop
 import androidx.compose.material.icons.filled.Timer
 import androidx.compose.material3.Card
@@ -40,7 +39,10 @@ import coil3.compose.AsyncImage
 import com.grimco.gymapp.presentation.components.ExerciseRoutineCard
 import com.grimco.gymapp.presentation.components.TextHeader
 import com.grimco.gymapp.presentation.viewmodel.DetailTrainingViewModel
-import com.grimco.gymapp.presentation.viewmodel.TrainingViewModel
+import gymapp.composeapp.generated.resources.Res
+import gymapp.composeapp.generated.resources.active_time
+import gymapp.composeapp.generated.resources.workout_routine
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
 
@@ -48,8 +50,6 @@ import org.koin.core.parameter.parametersOf
 @Preview
 fun RoutineDetailScreen(
     routineId: Long = 0,
-    routineName: String = "Push Day A",
-    minutes: String = "45 mins",
     modifier: Modifier = Modifier
 ) {
 
@@ -91,8 +91,8 @@ fun RoutineDetailScreen(
             Column(
                 modifier = Modifier.padding(start = 20.dp)
             ) {
-                TextHeader(routineName)
-                Text(text = minutes, color = MaterialTheme.colorScheme.secondary)
+                TextHeader(training?.training?.discipline ?: "")
+                Text(text = "minutes", color = MaterialTheme.colorScheme.secondary)
                 Text(text = "Chest, Shoulders, Triceps", color = MaterialTheme.colorScheme.tertiary)
             }
         }
@@ -113,14 +113,14 @@ fun RoutineDetailScreen(
                 Column(
                     modifier = Modifier.padding(start = 10.dp)
                 ) {
-                    Text( text = "Active time", color = MaterialTheme.colorScheme.secondary)
+                    Text( text = stringResource(Res.string.active_time), color = MaterialTheme.colorScheme.secondary)
                     TextHeader("28:18")
                 }
 
                 Spacer(modifier = Modifier.weight(1f))
                 Row {
                     IconButton(onClick = {}) {
-                        Icon(imageVector = Icons.Default.Pause, contentDescription = null)
+                        Icon(imageVector = Icons.Default.PlayArrow, contentDescription = null)
                     }
                     IconButton(onClick = {}) {
                         Icon(imageVector = Icons.Default.Stop, contentDescription = null)
@@ -136,7 +136,7 @@ fun RoutineDetailScreen(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier.fillMaxWidth()
         ){
-            TextHeader(text = "Exercises")
+            TextHeader(text = stringResource(Res.string.workout_routine))
             Text(text = "${training?.exercises?.size} TOTAL", color = MaterialTheme.colorScheme.secondary)
         }
         Spacer(modifier = Modifier.height(10.dp))

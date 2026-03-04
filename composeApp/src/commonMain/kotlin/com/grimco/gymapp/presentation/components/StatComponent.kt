@@ -20,6 +20,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import gymapp.composeapp.generated.resources.Res
+import gymapp.composeapp.generated.resources.calories
+import gymapp.composeapp.generated.resources.workouts
+import org.jetbrains.compose.resources.stringResource
 
 @Preview
 @Composable
@@ -38,14 +42,14 @@ fun StatComponent(modifier: Modifier = Modifier) {
             modifier = Modifier.fillMaxWidth()
         ) {
             CardStatParam(
-                title = "CALORIES",
+                title = stringResource(Res.string.calories),
                 content = "1,240 kcal",
                 percent = "+12",
                 modifier = Modifier.weight(1f)
             )
 
             CardStatParam(
-                title = "WORKOUTS",
+                title = stringResource(Res.string.workouts),
                 content = "4/5 days",
                 percent = "-12",
                 modifier = Modifier.weight(1f)

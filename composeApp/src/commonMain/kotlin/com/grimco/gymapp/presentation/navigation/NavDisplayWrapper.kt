@@ -59,7 +59,7 @@ fun NavDisplayWrapper(modifier: Modifier = Modifier) {
             }
 
             entry<Route.RoutineDetail> { navBackStack ->
-                RoutineDetailScreen(navBackStack.routineId, navBackStack.routineName, navBackStack.minutes)
+                RoutineDetailScreen(navBackStack.routineId)
             }
             entry<Route.TrainingList> {
                 TrainingListScreen(

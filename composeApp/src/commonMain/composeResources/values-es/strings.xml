@@ -1,0 +1,15 @@
+<resources>
+    <string name="active_time">Tiempo de actividad</string>
+    <string name="workout_routine">Rutina Entrenamiento</string>
+    <string name="activity">Actividad</string>
+    <string name="see_all">Ver Todas</string>
+    <string name="calories">CALORIAS</string>
+    <string name="workouts">ENTRENAMIENTOS</string>
+    <string name="weekly_goal">Objetivo semanal</string>
+    <string name="days">DÍAS</string>
+    <string name="mins">MIN</string>
+    <string name="favorite">RUTINAS FAVORITAS</string>
+    <string name="next_workout">Siguiente Entrenamiento</string>
+    <string name="upcoming_session">PRÓXIMA SESIÓN</string>
+    <string name="start_workout">INICIAR ENTRENAMIENTO</string>
+</resources>
