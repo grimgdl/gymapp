@@ -55,6 +55,7 @@ fun RoutineDetailScreen(
 
     val viewModel: DetailTrainingViewModel = koinViewModel( parameters = { parametersOf(routineId) })
     val training by viewModel.training.collectAsStateWithLifecycle()
+    val timer by viewModel.timer.collectAsStateWithLifecycle()
 
     Column(
         modifier = modifier
@@ -114,15 +115,19 @@ fun RoutineDetailScreen(
                     modifier = Modifier.padding(start = 10.dp)
                 ) {
                     Text( text = stringResource(Res.string.active_time), color = MaterialTheme.colorScheme.secondary)
-                    TextHeader("28:18")
+                    TextHeader(timer)
                 }
 
                 Spacer(modifier = Modifier.weight(1f))
                 Row {
-                    IconButton(onClick = {}) {
+                    IconButton(onClick = {
+                        viewModel.startTimer()
+                    }) {
                         Icon(imageVector = Icons.Default.PlayArrow, contentDescription = null)
                     }
-                    IconButton(onClick = {}) {
+                    IconButton(onClick = {
+                        viewModel.stopTimer()
+                    }) {
                         Icon(imageVector = Icons.Default.Stop, contentDescription = null)
                     }
                 }
