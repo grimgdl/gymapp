@@ -20,6 +20,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -59,6 +60,7 @@ fun MainScreen(
     val scrollState = rememberScrollState()
     val name = remember { "User Name" }
     val trainings by viewmodel.trainings.collectAsStateWithLifecycle()
+
 
     Column(
         modifier = modifier.padding(16.dp)
@@ -278,6 +280,11 @@ fun MainScreen2(
         )
         Spacer(modifier = Modifier.height(10.dp))
         CardWorkout()
+    }
+
+
+    LaunchedEffect(Unit) {
+
     }
 }
 
