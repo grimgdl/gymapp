@@ -2,6 +2,7 @@ package com.grimco.gymapp.presentation.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberNavBackStack
@@ -39,6 +40,7 @@ fun NavDisplayWrapper(modifier: Modifier = Modifier) {
 
     NavDisplay(
         backStack = navBackStack,
+        entryDecorators = listOf(rememberViewModelStoreNavEntryDecorator()),
         entryProvider = entryProvider {
 
             entry<Route.Main> {
