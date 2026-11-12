@@ -19,8 +19,9 @@ class TrainingRepository(
     }
 
     suspend fun updateImage(idTraining: Long, imagePath: String) {
-        val training = trainingDao.getTraining(idTraining)
-        trainingDao.insert(training.copy(image = imagePath))
+        trainingDao.getTraining(idTraining).let { training ->
+            trainingDao.insert(training.copy(image = imagePath))
+        }
     }
 
     fun getTrainingWithExercisesById(id: Long): Flow<TrainingExercise?> {

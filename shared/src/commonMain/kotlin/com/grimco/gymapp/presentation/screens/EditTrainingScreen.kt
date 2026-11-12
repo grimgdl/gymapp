@@ -232,13 +232,6 @@ fun EditTrainingScreen(
     }
 
 
-    LaunchedEffect(canSwipe) {
-        if (canSwipe) {
-            viewModel.loadExercises()
-        }
-    }
-
-
     LaunchedEffect(discipline) {
         discipline?.let {
             if (trainingState.text.toString() != it) {

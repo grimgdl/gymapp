@@ -6,6 +6,7 @@ import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDe
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberNavBackStack
+import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
 import androidx.savedstate.serialization.SavedStateConfiguration
 import com.grimco.gymapp.presentation.screens.CreateRoutineScreen
@@ -40,7 +41,10 @@ fun NavDisplayWrapper(modifier: Modifier = Modifier) {
 
     NavDisplay(
         backStack = navBackStack,
-        entryDecorators = listOf(rememberViewModelStoreNavEntryDecorator()),
+        entryDecorators = listOf(
+            rememberViewModelStoreNavEntryDecorator(),
+            rememberSaveableStateHolderNavEntryDecorator()
+        ),
         entryProvider = entryProvider {
 
             entry<Route.Main> {

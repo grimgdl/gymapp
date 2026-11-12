@@ -56,6 +56,7 @@ kotlin {
             implementation(libs.material.icons.core)
             implementation(libs.material.icons.extended)
 
+            implementation(libs.jetbrains.nav3.runtime)
             implementation(libs.jetbrains.nav3.ui)
             implementation(libs.jetbrains.lifecycle.viewmodel.nav3)
             implementation(libs.jetbrains.lifecycle.viewmodel)
