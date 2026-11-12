@@ -40,8 +40,8 @@ kotlin {
             implementation(libs.ui.tooling)
             implementation(libs.androidx.activity.compose)
             implementation(libs.ktor.engine.android)
-            implementation("androidx.health.connect:connect-client:1.1.0")
-            implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.10.2")
+            implementation(libs.androidx.connect.client)
+            implementation(libs.kotlinx.coroutines.play.services)
 
         }
         commonMain.dependencies {

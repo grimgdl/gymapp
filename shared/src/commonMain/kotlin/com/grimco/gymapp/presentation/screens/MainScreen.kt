@@ -111,6 +111,9 @@ fun MainScreen(
 
         StatComponent()
 
+        TextButton(onClick = { onNavigation(Route.WorkoutHistory) }) {
+            Text("Historial de entrenamientos", color = MaterialTheme.colorScheme.tertiary)
+        }
 
         Spacer(modifier = Modifier.height(30.dp))
 
@@ -233,6 +236,9 @@ fun MainScreen2(
 
         StatComponent()
 
+        TextButton(onClick = { onNavigation(Route.WorkoutHistory) }) {
+            Text("Historial de entrenamientos", color = MaterialTheme.colorScheme.tertiary)
+        }
 
         Spacer(modifier = Modifier.height(30.dp))
 

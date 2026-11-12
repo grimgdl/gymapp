@@ -15,16 +15,17 @@ import com.grimco.gymapp.presentation.screens.LoginScreen
 import com.grimco.gymapp.presentation.screens.MainScreen
 import com.grimco.gymapp.presentation.screens.RoutineDetailScreen
 import com.grimco.gymapp.presentation.screens.TrainingListScreen
+import com.grimco.gymapp.presentation.screens.WorkoutHistoryScreen
+import com.grimco.gymapp.presentation.screens.WorkoutSessionScreen
 import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.polymorphic
 import kotlinx.serialization.modules.subclass
 
-
 @Composable
 fun NavDisplayWrapper(modifier: Modifier = Modifier) {
     val navBackStack = rememberNavBackStack(
-        configuration = SavedStateConfiguration{
-            serializersModule = SerializersModule{
+        configuration = SavedStateConfiguration {
+            serializersModule = SerializersModule {
                 polymorphic(NavKey::class) {
                     subclass(Route.Main::class)
                     subclass(Route.Login::class)
@@ -32,12 +33,13 @@ fun NavDisplayWrapper(modifier: Modifier = Modifier) {
                     subclass(Route.RoutineDetail::class)
                     subclass(Route.TrainingList::class)
                     subclass(Route.EditTraining::class)
+                    subclass(Route.WorkoutSession::class)
+                    subclass(Route.WorkoutHistory::class)
                 }
             }
         },
         Route.Main
     )
-
 
     NavDisplay(
         backStack = navBackStack,
@@ -46,42 +48,36 @@ fun NavDisplayWrapper(modifier: Modifier = Modifier) {
             rememberSaveableStateHolderNavEntryDecorator()
         ),
         entryProvider = entryProvider {
-
             entry<Route.Main> {
                 MainScreen(
                     onTraining = {
-                        navBackStack.add(Route.RoutineDetail(routineId = it.id, routineName = it.discipline, minutes = it.minutes))
+                        navBackStack.add(Route.RoutineDetail(it.id, it.discipline, it.minutes))
                     },
-                    onNavigation = {
-                        navBackStack.add(it)
-                    }
+                    onNavigation = { navBackStack.add(it) }
                 )
             }
-            entry<Route.Login> {
-                LoginScreen()
-            }
-            entry<Route.RoutineMaker> {
-                CreateRoutineScreen()
-            }
-
-            entry<Route.RoutineDetail> { navBackStack ->
-                RoutineDetailScreen(navBackStack.routineId)
+            entry<Route.Login> { LoginScreen() }
+            entry<Route.RoutineMaker> { CreateRoutineScreen() }
+            entry<Route.RoutineDetail> { route ->
+                RoutineDetailScreen(
+                    routineId = route.routineId,
+                    onStartWorkout = { navBackStack.add(Route.WorkoutSession(route.routineId)) }
+                )
             }
             entry<Route.TrainingList> {
-                TrainingListScreen(
-                    onEdit = {
-                        navBackStack.add(Route.EditTraining(it.training.id))
-                    }
+                TrainingListScreen(onEdit = {
+                    navBackStack.add(Route.EditTraining(it.training.id))
+                })
+            }
+            entry<Route.EditTraining> { route -> EditTrainingScreen(route.idTraining) }
+            entry<Route.WorkoutSession> { route ->
+                WorkoutSessionScreen(
+                    routineId = route.routineId,
+                    onBack = { if (navBackStack.size > 1) navBackStack.removeAt(navBackStack.lastIndex) }
                 )
             }
-
-            entry<Route.EditTraining>{ back ->
-                EditTrainingScreen(back.idTraining)
-            }
-
-
+            entry<Route.WorkoutHistory> { WorkoutHistoryScreen() }
         },
         modifier = modifier
     )
-
 }

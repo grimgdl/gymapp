@@ -12,6 +12,8 @@ import com.grimco.gymapp.presentation.viewmodel.DetailTrainingViewModel
 import com.grimco.gymapp.presentation.viewmodel.EditTrainingViewModel
 import com.grimco.gymapp.presentation.viewmodel.MainViewmodel
 import com.grimco.gymapp.presentation.viewmodel.TrainingViewModel
+import com.grimco.gymapp.presentation.viewmodel.WorkoutHistoryViewModel
+import com.grimco.gymapp.presentation.viewmodel.WorkoutSessionViewModel
 import org.koin.core.module.Module
 import org.koin.core.module.dsl.bind
 import org.koin.core.module.dsl.singleOf
@@ -33,5 +35,7 @@ actual val platformModule: Module = module {
     viewModelOf(::TrainingViewModel)
     viewModelOf(::EditTrainingViewModel)
     viewModelOf(::DetailTrainingViewModel)
+    viewModelOf(::WorkoutSessionViewModel)
+    viewModelOf(::WorkoutHistoryViewModel)
     singleOf(::AndroidSmartwatchManager) {bind<SmartwatchManager>()}
 }
