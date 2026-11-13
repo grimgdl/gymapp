@@ -187,13 +187,23 @@ fun EditTrainingScreen(
             }
 
             LazyColumn {
-                trainingList?.exercises?.let {
-                    items(items = it) { exercise ->
+                trainingList?.let { training ->
+                    items(items = training.exercises) { exercise ->
+                        val plan = training.exercisePlans.firstOrNull {
+                            it.idExercise == exercise.id
+                        }
                         ExerciseCard(
-                            Exercise(
-                                id = exercise.id,
-                                name = exercise.name
-                            ),
+                            item = Exercise(id = exercise.id, name = exercise.name),
+                            plannedSets = plan?.plannedSets ?: 3,
+                            plannedReps = plan?.plannedReps ?: 10,
+                            onPlanChanged = { sets, reps ->
+                                viewModel.updateExercisePlan(
+                                    idTraining = idTraining,
+                                    idExercise = exercise.id,
+                                    plannedSets = sets,
+                                    plannedReps = reps
+                                )
+                            },
                             onDelete = {
                                 scope.launch {
                                     viewModel.deleteTrainingExercise(

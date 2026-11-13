@@ -28,7 +28,7 @@ const val DATABASE_NAME = "my_training.db"
         SessionExerciseEntity::class,
         WorkoutSetEntity::class
     ],
-    version = 2
+    version = 3
 )
 @ConstructedBy(AppDatabaseConstructor::class)
 abstract class AppDatabase : RoomDatabase() {
@@ -54,9 +54,20 @@ private object Migration1To2 : Migration(1, 2) {
     }
 }
 
+private object Migration2To3 : Migration(2, 3) {
+    override fun migrate(connection: SQLiteConnection) {
+        connection.prepare(
+            "ALTER TABLE training_exercises ADD COLUMN plannedSets INTEGER NOT NULL DEFAULT 3"
+        ).use { it.step() }
+        connection.prepare(
+            "ALTER TABLE training_exercises ADD COLUMN plannedReps INTEGER NOT NULL DEFAULT 10"
+        ).use { it.step() }
+    }
+}
+
 fun getRoomDatabase(builder: RoomDatabase.Builder<AppDatabase>): AppDatabase {
     return builder
-        .addMigrations(Migration1To2)
+        .addMigrations(Migration1To2, Migration2To3)
         .fallbackToDestructiveMigrationOnDowngrade(true)
         .setDriver(BundledSQLiteDriver())
         .setQueryCoroutineContext(Dispatchers.IO)

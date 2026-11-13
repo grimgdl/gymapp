@@ -1,6 +1,7 @@
 package com.grimco.gymapp.data.repository
 
 import com.grimco.gymapp.data.dao.TrainingDao
+import com.grimco.gymapp.data.dtos.ExercisePrescription
 import com.grimco.gymapp.data.dtos.TrainingExercise
 import com.grimco.gymapp.data.dtos.WorkoutSessionWithExercises
 import com.grimco.gymapp.data.model.ExercisesEntity
@@ -25,17 +26,21 @@ class TrainingRepository(private val trainingDao: TrainingDao) {
     suspend fun updateTraining(trainingEntity: TrainingEntity) = trainingDao.insert(trainingEntity)
     suspend fun addExerciseTraining(idTraining: Long, exercisesEntity: ExercisesEntity) =
         trainingDao.addExercisesToTraining(idTraining, exercisesEntity)
+    suspend fun updateExercisePlan(plan: TrainingExercisesEntity) =
+        trainingDao.insertTrainingExercise(plan)
     fun getExercises(): Flow<List<ExercisesEntity>> = trainingDao.getExercises()
     suspend fun deleteTrainingExercise(trainingExercisesEntity: TrainingExercisesEntity) =
         trainingDao.deleteTrainingExercise(trainingExercisesEntity)
 
     fun observeDraft(): Flow<WorkoutSessionEntity?> = trainingDao.observeDraft()
-    suspend fun createSession(routineName: String, exerciseNames: List<String>, startedAt: Long): Long =
-        trainingDao.createSession(routineName, exerciseNames, startedAt)
+    suspend fun createSession(
+        routineName: String,
+        exercisePlans: List<ExercisePrescription>,
+        startedAt: Long
+    ): Long = trainingDao.createSession(routineName, exercisePlans, startedAt)
     fun observeSession(id: Long): Flow<WorkoutSessionWithExercises?> = trainingDao.observeSession(id)
     fun observeCompletedSessions(): Flow<List<WorkoutSessionWithExercises>> =
         trainingDao.observeCompletedSessions()
-    suspend fun addSet(exerciseId: Long, setNumber: Int) = trainingDao.addSet(exerciseId, setNumber)
     suspend fun updateSet(set: WorkoutSetEntity) = trainingDao.updateSet(set)
     suspend fun finishSession(id: Long, endedAt: Long) = trainingDao.finishSession(id, endedAt)
     suspend fun deleteSession(id: Long) = trainingDao.deleteSession(id)

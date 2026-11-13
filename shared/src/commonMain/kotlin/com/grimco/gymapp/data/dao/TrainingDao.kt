@@ -7,6 +7,7 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Update
+import com.grimco.gymapp.data.dtos.ExercisePrescription
 import com.grimco.gymapp.data.dtos.TrainingExercise
 import com.grimco.gymapp.data.dtos.WorkoutSessionWithExercises
 import com.grimco.gymapp.data.model.ExercisesEntity
@@ -73,24 +74,31 @@ interface TrainingDao {
     fun observeCompletedSessions(): Flow<List<WorkoutSessionWithExercises>>
 
     @Transaction
-    suspend fun createSession(routineName: String, exerciseNames: List<String>, startedAt: Long): Long {
+    suspend fun createSession(
+        routineName: String,
+        exercisePlans: List<ExercisePrescription>,
+        startedAt: Long
+    ): Long {
         val sessionId = insertSession(WorkoutSessionEntity(
             routineName = routineName,
             startedAt = startedAt
         ))
-        exerciseNames.forEachIndexed { index, name ->
+        exercisePlans.forEachIndexed { index, plan ->
             val exerciseId = insertSessionExercise(SessionExerciseEntity(
                 sessionId = sessionId,
-                exerciseName = name,
+                exerciseName = plan.name,
                 position = index
             ))
-            insertSet(WorkoutSetEntity(sessionExerciseId = exerciseId, setNumber = 1))
+            repeat(plan.sets.coerceAtLeast(1)) { setIndex ->
+                insertSet(
+                    WorkoutSetEntity(
+                        sessionExerciseId = exerciseId,
+                        setNumber = setIndex + 1,
+                        reps = plan.reps.coerceAtLeast(1)
+                    )
+                )
+            }
         }
         return sessionId
-    }
-
-    @Transaction
-    suspend fun addSet(sessionExerciseId: Long, setNumber: Int) {
-        insertSet(WorkoutSetEntity(sessionExerciseId = sessionExerciseId, setNumber = setNumber))
     }
 }

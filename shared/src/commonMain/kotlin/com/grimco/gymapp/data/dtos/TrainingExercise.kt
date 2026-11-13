@@ -7,7 +7,6 @@ import com.grimco.gymapp.data.model.ExercisesEntity
 import com.grimco.gymapp.data.model.TrainingEntity
 import com.grimco.gymapp.data.model.TrainingExercisesEntity
 
-
 data class TrainingExercise(
     @Embedded val training: TrainingEntity,
     @Relation(
@@ -19,5 +18,11 @@ data class TrainingExercise(
             entityColumn = "idExercise"
         )
     )
-    val exercises: List<ExercisesEntity>
+    val exercises: List<ExercisesEntity>,
+    @Relation(
+        parentColumn = "id",
+        entityColumn = "idTraining",
+        entity = TrainingExercisesEntity::class
+    )
+    val exercisePlans: List<TrainingExercisesEntity>
 )

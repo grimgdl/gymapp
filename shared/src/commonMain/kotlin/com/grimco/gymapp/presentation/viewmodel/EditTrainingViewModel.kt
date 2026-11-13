@@ -69,9 +69,23 @@ class EditTrainingViewModel(
     }
     fun insertExercise(name: String) {
         viewModelScope.launch {
-            repository.insertExercise(
-                ExercisesEntity(
-                    name = name
+            repository.insertExercise(ExercisesEntity(name = name))
+        }
+    }
+
+    fun updateExercisePlan(
+        idTraining: Long,
+        idExercise: Long,
+        plannedSets: Int,
+        plannedReps: Int
+    ) {
+        viewModelScope.launch {
+            repository.updateExercisePlan(
+                TrainingExercisesEntity(
+                    idTraining = idTraining,
+                    idExercise = idExercise,
+                    plannedSets = plannedSets.coerceAtLeast(1),
+                    plannedReps = plannedReps.coerceAtLeast(1)
                 )
             )
         }
