@@ -1,9 +1,11 @@
 package com.grimco.gymapp.presentation.components
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
@@ -97,25 +99,29 @@ fun ExerciseCard(
             }
 
             if (showDialogEquipment) {
+                var filter by remember { mutableStateOf("") }
                 AlertDialog(
-                    onDismissRequest = {},
-                    text = {
-                        EquipmentList(
-                            machines = machines
+                    onDismissRequest = {
+                        showDialogEquipment = false
+                    },
+                    title = {
+                        OutlinedTextField(
+                            value = filter,
+                            label = {Text("filter")},
+                            onValueChange = { filter = it}
                         )
                     },
-                    dismissButton = {
-                        TextButton(onClick = {
-                            showDialogEquipment = false
-                        }) { Text("Cancel") }
+                    text = {
+                        EquipmentList(
+                            machines = machines,
+                            modifier = Modifier.fillMaxWidth(),
+                            onItemClick = {
+                                onMachineSelected(it)
+                                showDialogEquipment = false
+                            }
+                        )
                     },
-                    confirmButton = {
-                        TextButton(
-                            onClick = {},
-                        ) {
-                            Text("Confirm")
-                        }
-                    }
+                    confirmButton = {}
                 )
             }
 
