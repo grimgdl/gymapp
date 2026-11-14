@@ -5,6 +5,7 @@ import com.grimco.gymapp.data.dtos.ExercisePrescription
 import com.grimco.gymapp.data.dtos.TrainingExercise
 import com.grimco.gymapp.data.dtos.WorkoutSessionWithExercises
 import com.grimco.gymapp.data.model.ExercisesEntity
+import com.grimco.gymapp.data.model.GymMachineEntity
 import com.grimco.gymapp.data.model.TrainingEntity
 import com.grimco.gymapp.data.model.TrainingExercisesEntity
 import com.grimco.gymapp.data.model.WorkoutSessionEntity
@@ -28,6 +29,13 @@ class TrainingRepository(private val trainingDao: TrainingDao) {
         trainingDao.addExercisesToTraining(idTraining, exercisesEntity)
     suspend fun updateExercisePlan(plan: TrainingExercisesEntity) =
         trainingDao.insertTrainingExercise(plan)
+    suspend fun assignMachine(exerciseId: Long, machineId: Long?) =
+        trainingDao.assignMachine(exerciseId, machineId)
+    fun observeMachines(): Flow<List<GymMachineEntity>> = trainingDao.observeMachines()
+    suspend fun getMachine(id: Long): GymMachineEntity? = trainingDao.getMachine(id)
+    suspend fun createMachine(machine: GymMachineEntity): Long = trainingDao.insertMachine(machine)
+    suspend fun updateMachine(machine: GymMachineEntity) = trainingDao.updateMachine(machine)
+    suspend fun deleteMachine(machine: GymMachineEntity) = trainingDao.deleteMachine(machine)
     fun getExercises(): Flow<List<ExercisesEntity>> = trainingDao.getExercises()
     suspend fun deleteTrainingExercise(trainingExercisesEntity: TrainingExercisesEntity) =
         trainingDao.deleteTrainingExercise(trainingExercisesEntity)

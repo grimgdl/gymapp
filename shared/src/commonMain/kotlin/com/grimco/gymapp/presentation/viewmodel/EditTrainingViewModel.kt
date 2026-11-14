@@ -5,14 +5,18 @@ import androidx.lifecycle.viewModelScope
 import com.grimco.gymapp.data.dtos.TrainingExercise
 import com.grimco.gymapp.data.model.ExercisesEntity
 import com.grimco.gymapp.data.model.TrainingExercisesEntity
+import com.grimco.gymapp.data.model.toDomain
 import com.grimco.gymapp.data.repository.TrainingRepository
+import com.grimco.gymapp.domain.model.GymMachine
+import com.grimco.gymapp.domain.model.toData
 import com.grimco.gymapp.domain.repository.ImageStorage
-import com.grimco.gymapp.presentation.utils.FlowEditableField
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
@@ -20,12 +24,12 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 
-@OptIn(FlowPreview::class)
 class EditTrainingViewModel(
     private val repository: TrainingRepository,
     private val imageStorage: ImageStorage
 ) : ViewModel() {
     private val _idTraining = MutableStateFlow<Long?>(null)
+    private var isInitialized = false
     @OptIn(ExperimentalCoroutinesApi::class)
     val training: StateFlow<TrainingExercise?> = _idTraining
         .filterNotNull()
@@ -43,18 +47,57 @@ class EditTrainingViewModel(
             initialValue = emptyList()
         )
 
-    val disciplineEditor = FlowEditableField(
-        source = training
-            .filterNotNull()
-            .map { it.training.discipline },
-        scope = viewModelScope,
-        onCommit = { newValue ->
-            val current = training.value?.training ?: return@FlowEditableField
-            repository.updateTraining(
-                current.copy(discipline = newValue)
-            )
+    val machines: StateFlow<List<GymMachine>> = repository.observeMachines()
+        .map { entities ->
+            entities.map { it.toDomain() }
         }
-    )
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5_000),
+            initialValue = emptyList()
+        )
+
+
+
+    private val _disciplineInput = MutableStateFlow("")
+    val disciplineInput: StateFlow<String> = _disciplineInput.asStateFlow()
+
+
+    init {
+
+        viewModelScope.launch {
+            training.filterNotNull().collect { trainingExercise ->
+                val dbDiscipline = trainingExercise.training.discipline
+                // Solo inicializamos si no se ha hecho, o si cambió de entrenamiento (opcional)
+                if (!isInitialized && dbDiscipline.isNotEmpty()) {
+                    _disciplineInput.value = dbDiscipline
+                    isInitialized = true
+                }
+            }
+        }
+
+        viewModelScope.launch {
+            _disciplineInput
+                .debounce(500L)
+                .distinctUntilChanged()
+                .collect { newDiscipline ->
+                    val currentTrainingExercise = training.value?.training ?: return@collect
+                    if (currentTrainingExercise.discipline != newDiscipline && newDiscipline.isNotBlank()) {
+                        repository.updateTraining(
+                            currentTrainingExercise.copy(discipline = newDiscipline)
+                        )
+                    }
+                }
+
+
+        }
+
+    }
+
+
+    fun onDisciplineChanged(newText: String) {
+        _disciplineInput.value = newText
+    }
 
     fun setIdTraining(idTraining: Long) {
         viewModelScope.launch {
@@ -70,6 +113,42 @@ class EditTrainingViewModel(
     fun insertExercise(name: String) {
         viewModelScope.launch {
             repository.insertExercise(ExercisesEntity(name = name))
+        }
+    }
+
+    fun assignMachine(exerciseId: Long, machineId: Long?) {
+        viewModelScope.launch {
+            repository.assignMachine(exerciseId, machineId)
+        }
+    }
+
+    fun saveMachine(
+        existing: GymMachine?,
+        name: String,
+        notes: String,
+        imageBytes: ByteArray?
+    ) {
+        viewModelScope.launch {
+            val imagePath = imageBytes?.let {
+                imageStorage.saveImage("machine_${existing?.id ?: name}", it)
+            } ?: existing?.imagePath
+            val machine = GymMachine(
+                id = existing?.id ?: 0,
+                name = name.trim(),
+                notes = notes.trim().takeIf(String::isNotEmpty),
+                imagePath = imagePath
+            )
+            if (existing == null) {
+                repository.createMachine(machine.toData())
+            } else {
+                repository.updateMachine(machine.toData())
+            }
+        }
+    }
+
+    fun deleteMachine(machine: GymMachine) {
+        viewModelScope.launch {
+            repository.deleteMachine(machine.toData())
         }
     }
 

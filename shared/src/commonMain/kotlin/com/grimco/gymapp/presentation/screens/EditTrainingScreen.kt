@@ -17,13 +17,11 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Image
-import androidx.compose.material3.BasicAlertDialog
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.BottomSheetScaffold
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.SheetValue
@@ -38,7 +36,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
-import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -49,6 +46,7 @@ import com.grimco.gymapp.data.dtos.Exercise
 import com.grimco.gymapp.data.model.TrainingExercisesEntity
 import com.grimco.gymapp.presentation.components.ExerciseCard
 import com.grimco.gymapp.presentation.components.ExerciseCardContainer
+import com.grimco.gymapp.presentation.components.MachineManagerPanel
 import com.grimco.gymapp.presentation.components.TextHeader
 import com.grimco.gymapp.presentation.viewmodel.EditTrainingViewModel
 import com.mohamedrejeb.calf.core.LocalPlatformContext
@@ -67,11 +65,13 @@ fun EditTrainingScreen(
 ) {
 
     val viewModel: EditTrainingViewModel = koinViewModel()
-    val discipline by viewModel.disciplineEditor.input.collectAsStateWithLifecycle()
+    val discipline by viewModel.disciplineInput.collectAsStateWithLifecycle()
     val trainingList by viewModel.training.collectAsStateWithLifecycle()
-    val trainingState = rememberTextFieldState("")
+    val machines by viewModel.machines.collectAsStateWithLifecycle()
+    val trainingState by remember { mutableStateOf("") }
 
     var showDialogExercise by remember { mutableStateOf(false)}
+    var showMachineManager by remember { mutableStateOf(false)}
 
     val scope = rememberCoroutineScope()
 
@@ -108,16 +108,35 @@ fun EditTrainingScreen(
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    TextHeader("Exercise list")
+                    TextHeader(if (showMachineManager) "Machines" else "Exercise list")
 
-                    TextButton(onClick = {
-                        showDialogExercise = true
-                    }) {
-                        Text("New Exercise", color = MaterialTheme.colorScheme.tertiary)
+                    if (showMachineManager) {
+                        TextButton(onClick = { showMachineManager = false }) {
+                            Text("Back to exercises")
+                        }
+                    } else {
+                        TextButton(onClick = { showDialogExercise = true }) {
+                            Text("New Exercise", color = MaterialTheme.colorScheme.tertiary)
+                        }
                     }
                 }
 
-                if (canSwipe) {
+                if (!showMachineManager) {
+                    TextButton(
+                        onClick = { showMachineManager = true },
+                        modifier = Modifier.padding(horizontal = 16.dp)
+                    ) {
+                        Text("Administrar máquinas")
+                    }
+                }
+
+                if (showMachineManager) {
+                    MachineManagerPanel(
+                        machines = machines,
+                        onSave = viewModel::saveMachine,
+                        onDelete = viewModel::deleteMachine
+                    )
+                } else if (canSwipe) {
                     val exercisesList by viewModel.exercises.collectAsStateWithLifecycle()
                     ExerciseCardContainer(
                         exercisesList,
@@ -176,7 +195,8 @@ fun EditTrainingScreen(
             }
 
             OutlinedTextField(
-                state = trainingState,
+                value = discipline,
+                onValueChange = viewModel::onDisciplineChanged,
                 label = {
                     Text("Training Name")
                 },
@@ -191,32 +211,38 @@ fun EditTrainingScreen(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 TextHeader(text = "Exercise List")
-                IconButton(
-                    onClick = {
-                        canSwipe = true
-                        scope.launch {
-                            bottomSheetState.bottomSheetState.expand()
-                        }
+
+                TextButton(onClick = {
+                    canSwipe = true
+                    scope.launch {
+                        bottomSheetState.bottomSheetState.expand()
                     }
-                ) {
-                    Icon(imageVector = Icons.Default.Add, contentDescription = null)
+                }) {
+                    Text("Agregar", color = MaterialTheme.colorScheme.tertiary)
                 }
+
             }
 
             LazyColumn {
                 trainingList?.let { training ->
                     items(items = training.exercises) { exercise ->
+                        val exerciseEntity = exercise.exercise
                         val plan = training.exercisePlans.firstOrNull {
-                            it.idExercise == exercise.id
+                            it.idExercise == exerciseEntity.id
                         }
                         ExerciseCard(
-                            item = Exercise(id = exercise.id, name = exercise.name),
+                            item = Exercise(id = exerciseEntity.id, name = exerciseEntity.name),
                             plannedSets = plan?.plannedSets ?: 3,
                             plannedReps = plan?.plannedReps ?: 10,
+                            machineId = exerciseEntity.machineId,
+                            machines = machines,
+                            onMachineSelected = { machineId ->
+                                viewModel.assignMachine(exerciseEntity.id, machineId)
+                            },
                             onPlanChanged = { sets, reps ->
                                 viewModel.updateExercisePlan(
                                     idTraining = idTraining,
-                                    idExercise = exercise.id,
+                                    idExercise = exerciseEntity.id,
                                     plannedSets = sets,
                                     plannedReps = reps
                                 )
@@ -226,7 +252,7 @@ fun EditTrainingScreen(
                                     viewModel.deleteTrainingExercise(
                                         TrainingExercisesEntity(
                                             idTraining,
-                                            exercise.id
+                                            exerciseEntity.id
                                         )
                                     )
                                 }
@@ -239,40 +265,41 @@ fun EditTrainingScreen(
 
         if (showDialogExercise) {
             val exerciseState = rememberTextFieldState("")
-            BasicAlertDialog(
-                onDismissRequest = {
-                    showDialogExercise = false
-                    exerciseState.text.isNotEmpty().run {
-                        viewModel.insertExercise(exerciseState.text.toString())
+            AlertDialog(
+                onDismissRequest = {},
+                confirmButton = {
+                    TextButton(
+                        onClick = {
+                            showDialogExercise = false
+                            exerciseState.text.isNotEmpty().run {
+                                viewModel.insertExercise(exerciseState.text.toString())
+                            }
+                        }
+                    ) {
+                        Text("Confirm")
                     }
-                }
-            ){
-                OutlinedTextField(
-                    state = exerciseState,
-                    label = {
-                        Text("New Exercise Name")
+                },
+                dismissButton = {
+                    TextButton(
+                        onClick = {
+                            showDialogExercise = false
+                        }
+                    ) {
+                        Text("Cancel")
                     }
-                )
-            }
-        }
-
-    }
-
-
-    LaunchedEffect(discipline) {
-        discipline?.let {
-            if (trainingState.text.toString() != it) {
-                trainingState.edit {
-                    replace(0, length, it)
+                },
+                text = {
+                    OutlinedTextField(
+                        state = exerciseState,
+                        label = {
+                            Text("New Exercise Name")
+                        }
+                    )
                 }
-            }
+            )
         }
     }
 
-    LaunchedEffect(Unit) {
-        snapshotFlow { trainingState.text.toString() }
-            .collect { viewModel.disciplineEditor.update(it) }
-    }
 
 
     LaunchedEffect(idTraining) {

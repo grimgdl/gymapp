@@ -16,9 +16,10 @@ data class TrainingExercise(
             value = TrainingExercisesEntity::class,
             parentColumn = "idTraining",
             entityColumn = "idExercise"
-        )
+        ),
+        entity = ExercisesEntity::class
     )
-    val exercises: List<ExercisesEntity>,
+    val exercises: List<ExerciseWithMachine>,
     @Relation(
         parentColumn = "id",
         entityColumn = "idTraining",

@@ -9,6 +9,7 @@ import androidx.sqlite.SQLiteConnection
 import androidx.sqlite.driver.bundled.BundledSQLiteDriver
 import com.grimco.gymapp.data.dao.TrainingDao
 import com.grimco.gymapp.data.model.ExercisesEntity
+import com.grimco.gymapp.data.model.GymMachineEntity
 import com.grimco.gymapp.data.model.SessionExerciseEntity
 import com.grimco.gymapp.data.model.TrainingEntity
 import com.grimco.gymapp.data.model.TrainingExercisesEntity
@@ -26,9 +27,10 @@ const val DATABASE_NAME = "my_training.db"
         TrainingExercisesEntity::class,
         WorkoutSessionEntity::class,
         SessionExerciseEntity::class,
-        WorkoutSetEntity::class
+        WorkoutSetEntity::class,
+        GymMachineEntity::class
     ],
-    version = 3
+    version = 4
 )
 @ConstructedBy(AppDatabaseConstructor::class)
 abstract class AppDatabase : RoomDatabase() {
@@ -65,9 +67,26 @@ private object Migration2To3 : Migration(2, 3) {
     }
 }
 
+private object Migration3To4 : Migration(3, 4) {
+    override fun migrate(connection: SQLiteConnection) {
+        connection.prepare(
+            "CREATE TABLE IF NOT EXISTS gym_machines (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, name TEXT NOT NULL, notes TEXT, imagePath TEXT)"
+        ).use { it.step() }
+        connection.prepare(
+            "ALTER TABLE exercises ADD COLUMN machineId INTEGER REFERENCES gym_machines(id) ON UPDATE NO ACTION ON DELETE SET NULL"
+        ).use { it.step() }
+        connection.prepare(
+            "CREATE INDEX IF NOT EXISTS index_exercises_machineId ON exercises(machineId)"
+        ).use { it.step() }
+        connection.prepare(
+            "ALTER TABLE session_exercises ADD COLUMN machineName TEXT"
+        ).use { it.step() }
+    }
+}
+
 fun getRoomDatabase(builder: RoomDatabase.Builder<AppDatabase>): AppDatabase {
     return builder
-        .addMigrations(Migration1To2, Migration2To3)
+        .addMigrations(Migration1To2, Migration2To3, Migration3To4)
         .fallbackToDestructiveMigrationOnDowngrade(true)
         .setDriver(BundledSQLiteDriver())
         .setQueryCoroutineContext(Dispatchers.IO)

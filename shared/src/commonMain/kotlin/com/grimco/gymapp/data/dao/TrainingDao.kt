@@ -11,6 +11,7 @@ import com.grimco.gymapp.data.dtos.ExercisePrescription
 import com.grimco.gymapp.data.dtos.TrainingExercise
 import com.grimco.gymapp.data.dtos.WorkoutSessionWithExercises
 import com.grimco.gymapp.data.model.ExercisesEntity
+import com.grimco.gymapp.data.model.GymMachineEntity
 import com.grimco.gymapp.data.model.SessionExerciseEntity
 import com.grimco.gymapp.data.model.TrainingEntity
 import com.grimco.gymapp.data.model.TrainingExercisesEntity
@@ -24,6 +25,8 @@ interface TrainingDao {
     suspend fun insert(item: TrainingEntity)
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertExercise(exercise: ExercisesEntity)
+    @Query("UPDATE exercises SET machineId = :machineId WHERE id = :exerciseId")
+    suspend fun assignMachine(exerciseId: Long, machineId: Long?)
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertTrainingExercise(trainingExercisesEntity: TrainingExercisesEntity)
 
@@ -31,6 +34,16 @@ interface TrainingDao {
     suspend fun getTraining(id: Long): TrainingEntity
     @Query("select * from exercises")
     fun getExercises(): Flow<List<ExercisesEntity>>
+    @Query("SELECT * FROM gym_machines ORDER BY name COLLATE NOCASE")
+    fun observeMachines(): Flow<List<GymMachineEntity>>
+    @Query("SELECT * FROM gym_machines WHERE id = :machineId")
+    suspend fun getMachine(machineId: Long): GymMachineEntity?
+    @Insert
+    suspend fun insertMachine(machine: GymMachineEntity): Long
+    @Update
+    suspend fun updateMachine(machine: GymMachineEntity)
+    @Delete
+    suspend fun deleteMachine(machine: GymMachineEntity)
     @Query("select * from trainings")
     fun getAll(): Flow<List<TrainingEntity>>
     @Query("select * from trainings")
@@ -87,6 +100,7 @@ interface TrainingDao {
             val exerciseId = insertSessionExercise(SessionExerciseEntity(
                 sessionId = sessionId,
                 exerciseName = plan.name,
+                machineName = plan.machineName,
                 position = index
             ))
             repeat(plan.sets.coerceAtLeast(1)) { setIndex ->

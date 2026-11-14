@@ -71,11 +71,12 @@ class WorkoutSessionViewModel(private val repository: TrainingRepository) : View
         val id = repository.createSession(
             routineName = routine.training.discipline,
             exercisePlans = routine.exercises.map { exercise ->
-                val plan = routine.exercisePlans.firstOrNull { it.idExercise == exercise.id }
+                val plan = routine.exercisePlans.firstOrNull { it.idExercise == exercise.exercise.id }
                 ExercisePrescription(
-                    name = exercise.name,
+                    name = exercise.exercise.name,
                     sets = plan?.plannedSets ?: 3,
-                    reps = plan?.plannedReps ?: 10
+                    reps = plan?.plannedReps ?: 10,
+                    machineName = exercise.machine?.name
                 )
             },
             startedAt = Clock.System.now().toEpochMilliseconds()

@@ -102,6 +102,12 @@ fun WorkoutSessionScreen(
                 Card(modifier = Modifier.fillMaxWidth().padding(bottom = 12.dp)) {
                     Column(Modifier.padding(16.dp)) {
                         Text(exercise.exercise.exerciseName, style = MaterialTheme.typography.titleMedium)
+                        exercise.exercise.machineName?.let { machineName ->
+                            Text(
+                                "Máquina: $machineName",
+                                color = MaterialTheme.colorScheme.secondary
+                            )
+                        }
                         Spacer(Modifier.height(8.dp))
                         exercise.sets.sortedBy { it.setNumber }.forEach { set ->
                             SetEditor(set = set, onUpdate = viewModel::updateSet)

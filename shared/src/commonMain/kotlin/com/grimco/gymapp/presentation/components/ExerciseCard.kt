@@ -7,11 +7,16 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -21,18 +26,26 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.grimco.gymapp.data.dtos.Exercise
+import com.grimco.gymapp.domain.model.GymMachine
 
 @Composable
 fun ExerciseCard(
     item: Exercise,
     plannedSets: Int,
     plannedReps: Int,
+    machineId: Long?,
+    machines: List<GymMachine>,
+    onMachineSelected: (Long?) -> Unit,
     onPlanChanged: (sets: Int, reps: Int) -> Unit,
     onDelete: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     var setsText by remember(item.id) { mutableStateOf(plannedSets.toString()) }
     var repsText by remember(item.id) { mutableStateOf(plannedReps.toString()) }
+    var machineMenuExpanded by remember(item.id) { mutableStateOf(false) }
+    val selectedMachine = machines.firstOrNull { it.id == machineId }
+
+    var showDialogEquipment by remember { mutableStateOf(false) }
 
     Card(modifier = modifier.padding(bottom = 6.dp)) {
         Column(modifier = Modifier.fillMaxWidth().padding(12.dp)) {
@@ -75,6 +88,37 @@ fun ExerciseCard(
                     singleLine = true
                 )
             }
+
+            OutlinedButton(
+                onClick = { showDialogEquipment = true },
+                modifier = Modifier.fillMaxWidth().padding(top = 8.dp)
+            ) {
+                Text(selectedMachine?.name ?: "Sin máquina")
+            }
+
+            if (showDialogEquipment) {
+                AlertDialog(
+                    onDismissRequest = {},
+                    text = {
+                        EquipmentList(
+                            machines = machines
+                        )
+                    },
+                    dismissButton = {
+                        TextButton(onClick = {
+                            showDialogEquipment = false
+                        }) { Text("Cancel") }
+                    },
+                    confirmButton = {
+                        TextButton(
+                            onClick = {},
+                        ) {
+                            Text("Confirm")
+                        }
+                    }
+                )
+            }
+
         }
     }
 }

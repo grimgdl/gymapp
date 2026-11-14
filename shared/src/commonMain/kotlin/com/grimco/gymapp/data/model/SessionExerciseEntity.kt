@@ -21,5 +21,6 @@ data class SessionExerciseEntity(
     @PrimaryKey(autoGenerate = true) val id: Long = 0,
     val sessionId: Long,
     val exerciseName: String,
+    val machineName: String? = null,
     val position: Int
 )

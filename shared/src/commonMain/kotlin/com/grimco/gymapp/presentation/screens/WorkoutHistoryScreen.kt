@@ -71,6 +71,9 @@ private fun SessionHistoryCard(
                 Spacer(Modifier.padding(4.dp))
                 item.exercises.sortedBy { it.exercise.position }.forEach { exercise ->
                     Text(exercise.exercise.exerciseName, style = MaterialTheme.typography.titleSmall)
+                    exercise.exercise.machineName?.let { machineName ->
+                        Text("Máquina: $machineName")
+                    }
                     exercise.sets.sortedBy { it.setNumber }.forEach { set ->
                         Text("Serie ${set.setNumber}: ${set.reps} reps · ${set.weightKg} kg")
                     }

@@ -3,6 +3,7 @@ package com.grimco.gymapp.presentation.utils
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import kotlinx.coroutines.delay
+import kotlin.time.Duration.Companion.milliseconds
 
 
 @Composable
@@ -12,7 +13,7 @@ fun <T: CharSequence> DeBounceEffect(
     onDebounced: (T) -> Unit
 ) {
     LaunchedEffect(value) {
-        delay(delayMillis)
+        delay(delayMillis.milliseconds)
         onDebounced(value)
     }
 }
