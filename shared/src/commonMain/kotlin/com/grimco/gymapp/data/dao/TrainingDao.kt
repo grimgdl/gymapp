@@ -25,8 +25,23 @@ interface TrainingDao {
     suspend fun insert(item: TrainingEntity)
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertExercise(exercise: ExercisesEntity)
-    @Query("UPDATE exercises SET machineId = :machineId WHERE id = :exerciseId")
-    suspend fun assignMachine(exerciseId: Long, machineId: Long?)
+    @Query("""
+        UPDATE training_exercises
+        SET machineId = :machineId
+        WHERE idTraining = :idTraining AND idExercise = :exerciseId
+    """)
+    suspend fun assignMachine(idTraining: Long, exerciseId: Long, machineId: Long?)
+    @Query("""
+        UPDATE training_exercises
+        SET plannedSets = :plannedSets, plannedReps = :plannedReps
+        WHERE idTraining = :idTraining AND idExercise = :exerciseId
+    """)
+    suspend fun updateExercisePlan(
+        idTraining: Long,
+        exerciseId: Long,
+        plannedSets: Int,
+        plannedReps: Int
+    )
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertTrainingExercise(trainingExercisesEntity: TrainingExercisesEntity)
 

@@ -227,17 +227,15 @@ fun EditTrainingScreen(
                 trainingList?.let { training ->
                     items(items = training.exercises) { exercise ->
                         val exerciseEntity = exercise.exercise
-                        val plan = training.exercisePlans.firstOrNull {
-                            it.idExercise == exerciseEntity.id
-                        }
+                        val plan = exercise.plan
                         ExerciseCard(
                             item = Exercise(id = exerciseEntity.id, name = exerciseEntity.name),
-                            plannedSets = plan?.plannedSets ?: 3,
-                            plannedReps = plan?.plannedReps ?: 10,
-                            machineId = exerciseEntity.machineId,
+                            plannedSets = plan.plannedSets,
+                            plannedReps = plan.plannedReps,
+                            machineId = plan.machineId,
                             machines = machines,
                             onMachineSelected = { machineId ->
-                                viewModel.assignMachine(exerciseEntity.id, machineId)
+                                viewModel.assignMachine(idTraining, exerciseEntity.id, machineId)
                             },
                             onPlanChanged = { sets, reps ->
                                 viewModel.updateExercisePlan(

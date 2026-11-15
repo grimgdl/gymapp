@@ -116,9 +116,9 @@ class EditTrainingViewModel(
         }
     }
 
-    fun assignMachine(exerciseId: Long, machineId: Long?) {
+    fun assignMachine(idTraining: Long, exerciseId: Long, machineId: Long?) {
         viewModelScope.launch {
-            repository.assignMachine(exerciseId, machineId)
+            repository.assignMachine(idTraining, exerciseId, machineId)
         }
     }
 
@@ -160,12 +160,10 @@ class EditTrainingViewModel(
     ) {
         viewModelScope.launch {
             repository.updateExercisePlan(
-                TrainingExercisesEntity(
-                    idTraining = idTraining,
-                    idExercise = idExercise,
-                    plannedSets = plannedSets.coerceAtLeast(1),
-                    plannedReps = plannedReps.coerceAtLeast(1)
-                )
+                idTraining = idTraining,
+                exerciseId = idExercise,
+                plannedSets = plannedSets.coerceAtLeast(1),
+                plannedReps = plannedReps.coerceAtLeast(1)
             )
         }
     }

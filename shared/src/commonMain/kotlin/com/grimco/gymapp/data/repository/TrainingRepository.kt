@@ -27,10 +27,14 @@ class TrainingRepository(private val trainingDao: TrainingDao) {
     suspend fun updateTraining(trainingEntity: TrainingEntity) = trainingDao.insert(trainingEntity)
     suspend fun addExerciseTraining(idTraining: Long, exercisesEntity: ExercisesEntity) =
         trainingDao.addExercisesToTraining(idTraining, exercisesEntity)
-    suspend fun updateExercisePlan(plan: TrainingExercisesEntity) =
-        trainingDao.insertTrainingExercise(plan)
-    suspend fun assignMachine(exerciseId: Long, machineId: Long?) =
-        trainingDao.assignMachine(exerciseId, machineId)
+    suspend fun updateExercisePlan(
+        idTraining: Long,
+        exerciseId: Long,
+        plannedSets: Int,
+        plannedReps: Int
+    ) = trainingDao.updateExercisePlan(idTraining, exerciseId, plannedSets, plannedReps)
+    suspend fun assignMachine(idTraining: Long, exerciseId: Long, machineId: Long?) =
+        trainingDao.assignMachine(idTraining, exerciseId, machineId)
     fun observeMachines(): Flow<List<GymMachineEntity>> = trainingDao.observeMachines()
     suspend fun getMachine(id: Long): GymMachineEntity? = trainingDao.getMachine(id)
     suspend fun createMachine(machine: GymMachineEntity): Long = trainingDao.insertMachine(machine)

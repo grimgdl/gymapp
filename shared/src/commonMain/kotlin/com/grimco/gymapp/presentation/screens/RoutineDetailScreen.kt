@@ -84,13 +84,11 @@ fun RoutineDetailScreen(
             training?.exercises?.let { exercises ->
                 items(exercises) { exercise ->
                     Card(modifier = Modifier.fillMaxWidth().padding(bottom = 4.dp)) {
-                        val plan = training?.exercisePlans?.firstOrNull {
-                            it.idExercise == exercise.exercise.id
-                        }
+                        val plan = exercise.plan
                         Column(Modifier.padding(16.dp)) {
                             Text(exercise.exercise.name)
                             Text(
-                                "${plan?.plannedSets ?: 3} series × ${plan?.plannedReps ?: 10} reps",
+                                "${plan.plannedSets} series × ${plan.plannedReps} reps",
                                 color = MaterialTheme.colorScheme.secondary
                             )
                             exercise.machine?.let { machine ->

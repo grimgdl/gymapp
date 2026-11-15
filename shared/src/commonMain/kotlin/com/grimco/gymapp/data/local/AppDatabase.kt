@@ -30,7 +30,7 @@ const val DATABASE_NAME = "my_training.db"
         WorkoutSetEntity::class,
         GymMachineEntity::class
     ],
-    version = 4
+    version = 5
 )
 @ConstructedBy(AppDatabaseConstructor::class)
 abstract class AppDatabase : RoomDatabase() {
@@ -84,9 +84,34 @@ private object Migration3To4 : Migration(3, 4) {
     }
 }
 
+private object Migration4To5 : Migration(4, 5) {
+    override fun migrate(connection: SQLiteConnection) {
+        connection.prepare(
+            "ALTER TABLE training_exercises ADD COLUMN machineId INTEGER REFERENCES gym_machines(id) ON UPDATE NO ACTION ON DELETE SET NULL"
+        ).use { it.step() }
+        connection.prepare(
+            "CREATE INDEX IF NOT EXISTS index_training_exercises_machineId ON training_exercises(machineId)"
+        ).use { it.step() }
+        connection.prepare(
+            "UPDATE training_exercises SET machineId = (SELECT machineId FROM exercises WHERE exercises.id = training_exercises.idExercise)"
+        ).use { it.step() }
+
+        connection.prepare("DROP INDEX IF EXISTS index_exercises_machineId").use { it.step() }
+        connection.prepare("ALTER TABLE exercises RENAME TO exercises_v4").use { it.step() }
+        connection.prepare(
+            "CREATE TABLE exercises_v5 (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, name TEXT NOT NULL)"
+        ).use { it.step() }
+        connection.prepare(
+            "INSERT INTO exercises_v5 (id, name) SELECT id, name FROM exercises_v4"
+        ).use { it.step() }
+        connection.prepare("DROP TABLE exercises_v4").use { it.step() }
+        connection.prepare("ALTER TABLE exercises_v5 RENAME TO exercises").use { it.step() }
+    }
+}
+
 fun getRoomDatabase(builder: RoomDatabase.Builder<AppDatabase>): AppDatabase {
     return builder
-        .addMigrations(Migration1To2, Migration2To3, Migration3To4)
+        .addMigrations(Migration1To2, Migration2To3, Migration3To4, Migration4To5)
         .fallbackToDestructiveMigrationOnDowngrade(true)
         .setDriver(BundledSQLiteDriver())
         .setQueryCoroutineContext(Dispatchers.IO)
