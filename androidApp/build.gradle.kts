@@ -30,8 +30,8 @@ android {
         applicationId = "com.grimco.gymapp"
         minSdk = libs.versions.android.minSdk.get().toInt()
         targetSdk = libs.versions.android.targetSdk.get().toInt()
-        versionCode = 7
-        versionName = "alpha-0.1.7"
+        versionCode = 8
+        versionName = "alpha-0.1.7-hotfix"
     }
     packaging {
         resources {
